@@ -49,3 +49,22 @@ Developed by BSIT students at the University of San Agustin.
 * PostgreSQL (Supabase)
 
 ## Architecture & Folder Structure
+```text
+gradready/
+├── backend/                    # Java API for Database & Logic
+│   ├── src/main/java/          # Core Java source code
+│   │   ├── controllers/        # REST API endpoints for clearance
+│   │   ├── models/             # JPA Entities (Student, Department)
+│   │   ├── repositories/       # Database access interfaces
+│   │   └── services/           # Business logic & RBAC
+│   ├── src/main/resources/     # App configs & Supabase connections
+│   └── pom.xml                 # Maven dependencies
+├── frontend/                   # React UI & Dashboard
+│   ├── src/
+│   │   ├── components/         # Reusable UI (Buttons, Matrix)
+│   │   ├── pages/              # Main views (Admin, Student)
+│   │   ├── App.jsx             # Main routing
+│   │   └── main.jsx            # React entry point
+│   ├── package.json            # Node dependencies
+│   └── tailwind.config.js      # Tailwind directives
+└── README.md                   # Project documentation
