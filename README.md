@@ -50,21 +50,58 @@ Developed by BSIT students at the University of San Agustin.
 
 ## Architecture & Folder Structure
 ```text
-gradready/
-├── backend/                    # Java API for Database & Logic
-│   ├── src/main/java/          # Core Java source code
-│   │   ├── controllers/        # REST API endpoints for clearance
-│   │   ├── models/             # JPA Entities (Student, Department)
-│   │   ├── repositories/       # Database access interfaces
-│   │   └── services/           # Business logic & RBAC
-│   ├── src/main/resources/     # App configs & Supabase connections
-│   └── pom.xml                 # Maven dependencies
-├── frontend/                   # React UI & Dashboard
-│   ├── src/
-│   │   ├── components/         # Reusable UI (Buttons, Matrix)
-│   │   ├── pages/              # Main views (Admin, Student)
-│   │   ├── App.jsx             # Main routing
-│   │   └── main.jsx            # React entry point
-│   ├── package.json            # Node dependencies
-│   └── tailwind.config.js      # Tailwind directives
-└── README.md                   # Project documentation
+gradready-frontend/
+├── public/
+│   └── index.html
+├── src/
+│   ├── assets/                 # Images, icons, and global CSS
+│   ├── components/             # Reusable UI elements
+│   │   ├── common/             # Buttons, Inputs, Modals, Spinners
+│   │   └── layout/             # Navbar, Sidebar, Page wrappers
+│   ├── context/                # Global state (e.g., AuthProvider for RBAC)
+│   ├── pages/                  # Main route views
+│   │   ├── Auth/               # Login and Registration views
+│   │   ├── Student/            # Cumulative Clearance Summary, Matrix
+│   │   └── Admin/              # Master Dashboard, Notification alerts
+│   ├── services/               # Axios/Fetch configurations for API calls
+│   │   ├── api.js              # Base API instance with interceptors
+│   │   ├── authService.js      # Login/Logout calls
+│   │   └── clearanceService.js # Data fetching and status updates
+│   ├── utils/                  # Helper functions (date formatting, validators)
+│   ├── App.jsx                 # Route definitions (React Router)
+│   └── main.jsx                # Entry point
+├── tailwind.config.js          # Tailwind theme and plugin configuration
+└── package.json
+
+gradready-backend/
+├── src/
+│   ├── main/
+│   │   ├── java/com/csit221/gradready/
+│   │   │   ├── GradReadyApplication.java    # Main entry point
+│   │   │   ├── config/                      # Global configurations
+│   │   │   │   ├── CorsConfig.java          # Cross-Origin settings for React
+│   │   │   │   └── SecurityConfig.java      # Spring Security & RBAC rules
+│   │   │   ├── controllers/                 # REST API Endpoints
+│   │   │   │   ├── AuthController.java      # Handles login/tokens
+│   │   │   │   └── ClearanceController.java # Endpoints for matrix and status changes
+│   │   │   ├── dto/                         # Data Transfer Objects (Request/Response bodies)
+│   │   │   │   ├── LoginRequest.java
+│   │   │   │   └── StatusUpdateDto.java     
+│   │   │   ├── models/                      # JPA Entities (Database Tables)
+│   │   │   │   ├── User.java
+│   │   │   │   ├── StudentProfile.java
+│   │   │   │   ├── Department.java
+│   │   │   │   └── ClearanceTransaction.java
+│   │   │   ├── repositories/                # Spring Data JPA Interfaces
+│   │   │   │   ├── UserRepository.java
+│   │   │   │   └── ClearanceRepository.java 
+│   │   │   ├── services/                    # Core Business Logic
+│   │   │   │   ├── AuthService.java
+│   │   │   │   ├── ClearanceService.java    # Status progression logic 
+│   │   │   │   └── FileStorageService.java  # PDF/JPEG upload handling 
+│   │   │   └── exceptions/                  # Custom error handling
+│   │   │       ├── GlobalExceptionHandler.java
+│   │   │       └── InvalidRoleException.java
+│   │   └── resources/
+│   │       └── application.yml              # Supabase PostgreSQL connection details
+└── pom.xml                                  # Maven dependencies
