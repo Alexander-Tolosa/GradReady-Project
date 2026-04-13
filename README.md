@@ -7,23 +7,25 @@ The reliance on manual, paper-based student clearance workflows in many schools 
 The scope of this project covers the end-to-end digitization of the clearance workflow for University Students, Professors, and University Staff.
 
 In-Scope (Core Features):
-•Registration and Record Initialization: Adding student names and clearance records.
 
-•Clearance Requirements Matrix: Displaying a list of clearance requirements (e.g., Library, Guidance, Finance).
+•**Registration and Record Initialization:** Adding student names and clearance records.
 
-•Facility and Operating Hours Directory: Indicating office availabilities, specific rooms, and times.
+•**Clearance Requirements Matrix:** Displaying a list of clearance requirements (e.g., Library, Guidance, Finance).
 
-•Status Management Module: Tracking and updating requirement statuses (Pending -> Submitted -> Needs Revision / Action Required -> Cleared) with a secure 'undo' function for administrative errors.
+•**Facility and Operating Hours Directory:** Indicating office availabilities, specific rooms, and times.
 
-•Cumulative Clearance Summary: Viewing the overall clearance status of the student.
+•**Status Management Module:** Tracking and updating requirement statuses (Pending -> Submitted -> Needs Revision / Action Required -> Cleared) with a secure 'undo' function for administrative errors.
 
-•Student Record Archiving: Saving and loading student records.
+•**Cumulative Clearance Summary:** Viewing the overall clearance status of the student.
 
-•Faculty Notifications: Dashboard-based alert systems for administrators to prevent missed notifications.
+•**Student Record Archiving:** Saving and loading student records.
 
-•Data Processing: Managing four primary entities: Student Demographics, Departmental Profiles, Clearance Transactions, and System Users.
+•**Faculty Notifications:** Dashboard-based alert systems for administrators to prevent missed notifications.
+
+•**Data Processing:** Managing four primary entities: Student Demographics, Departmental Profiles, Clearance Transactions, and System Users.
 
 ## Out-of-Scope (Future Enhancements):
+
 •Dedicated Mobile Companion Application.
 
 •Inclusive HCI and Accessibility Modes (Voice-guided navigation, screen readers).
