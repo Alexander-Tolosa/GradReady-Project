@@ -1,33 +1,51 @@
-# GradReady: Student Clearance Tracking Application for University of San Agustin
+# GradReady: A Student Clearance Tracking Application
 
-## Project Overview
-The reliance on manual, paper-based student clearance workflows in many schools presents significant tracking challenges, resulting in lost documentation, ambiguous approval tracking, student confusion, and extended processing times. GradReady is a digital solution proposed to address these inefficiencies by digitizing the student clearance process. By allowing users to configure specific requirements and systematically monitor their fulfillment status, the system fosters a more rapid, organized, and manageable administrative workflow
+![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen) ![Stack](https://img.shields.io/badge/Stack-React_|_Spring_Boot_|_PostgreSQL-blue)
 
-## Project Scope
-The scope of this project covers the end-to-end digitization of the clearance workflow for University Students, Professors, and University Staff.
+---
 
-## In-Scope (Core Features):
+## Project Meaning & Scope
 
-  •**Registration and Record Initialization:** Adding student names and clearance records.
+The reliance on manual, paper-based student clearance workflows in many schools presents significant tracking challenges, resulting in lost documentation, ambiguous approval tracking, student confusion, and extended processing times.
 
-  •**Clearance Requirements Matrix:** Displaying a list of clearance requirements (e.g., Library, Guidance, Finance).
+GradReady addresses these inefficiencies by digitizing the student clearance process. By allowing users to configure specific requirements and systematically monitor their fulfillment status, the system fosters a more rapid, organized, and manageable administrative workflow.
 
-  •**Facility and Operating Hours Directory:** Indicating office availabilities, specific rooms, and times.
+* **Registration & Initialization:** Streamlines adding student names and clearance records into the system.
+* **Clearance Requirements Matrix:** Displays a dynamic list of clearance requirements across departments (e.g., Library, Guidance, Finance).
+* **Status Management Module:** Tracks requirement statuses through a granular progression (Pending -> Submitted -> Needs Revision -> Cleared) with a secure 'undo' function for administrative errors.
+* **Cumulative Clearance Summary:** Provides a top-level view of the overall clearance status for each student.
+* **Faculty Dashboard Notifications:** Implements a batch or dashboard-based alert system for administrators to ensure no clearance requests are missed.
+* **Role-Based Access Control (RBAC):** Ensures sensitive student records are compartmentalized and managed securely by authorized departmental staff.
 
-  •**Status Management Module:** Tracking and updating requirement statuses (Pending -> Submitted -> Needs Revision / Action Required -> Cleared) with a secure 'undo' function for administrative errors.
+## Team & Responsibilities
 
-  •**Cumulative Clearance Summary:** Viewing the overall clearance status of the student.
+Developed by BSIT students at the University of San Agustin.
 
-  •**Student Record Archiving:** Saving and loading student records.
+* **Alexander Michael S. Tolosa (Project Lead & Backend)**
+    * Oversees the overall project architecture and timeline.
+    * Develops the backend logic, REST APIs, and database mapping using Java + Spring Boot.
+    * Handles data ingestion, validation logic, and role-based access control.
+* **Matthew P. Tabat (Frontend Developer)**
+    * Crafts the user interfaces and client-side logic using React.js.
+    * Implements responsive styling and UI components using Tailwind CSS.
+* **Ella Jean Venus (Database Administrator & Integration)**
+    * Designs and normalizes the PostgreSQL database schema hosted on Supabase.
+    * Writes and optimizes SQL queries to link student data to departmental clearance statuses.
+* **Harry Leonard C. Villa (Quality Assurance & Testing)**
+    * Tests backend API endpoints and frontend component functionality.
+    * Conducts end-to-end user flow testing for the clearance process and validates extraction rules.
+* **Sam Robert B. Susvilla (UI/UX Designer & Documentation)**
+    * Designs wireframes and user flows for the Student and Department dashboards.
+    * Manages project documentation, GitHub repositories, and system flowcharts.
 
-  •**Faculty Notifications:** Dashboard-based alert systems for administrators to prevent missed notifications.
+## Tech Stack
 
-  •**Data Processing:** Managing four primary entities: Student Demographics, Departmental Profiles, Clearance Transactions, and System Users.
+**Frontend:**
+* React.js
+* Tailwind CSS
 
-## Out-of-Scope (Future Enhancements):
+**Backend & Database:**
+* Java (Spring Boot)
+* PostgreSQL (Supabase)
 
-  •Dedicated Mobile Companion Application.
-
-  •Inclusive HCI and Accessibility Modes (Voice-guided navigation, screen readers).
-
-  •Administrative Bottleneck Analytics dashboards.
+## Architecture & Folder Structure
