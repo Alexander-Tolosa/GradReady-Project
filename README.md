@@ -1,9 +1,9 @@
 # GradReady: Student Clearance Tracking Application for University of San Agustin
 
-# Project Overview
+## Project Overview
 The reliance on manual, paper-based student clearance workflows in many schools presents significant tracking challenges, resulting in lost documentation, ambiguous approval tracking, student confusion, and extended processing times. GradReady is a digital solution proposed to address these inefficiencies by digitizing the student clearance process. By allowing users to configure specific requirements and systematically monitor their fulfillment status, the system fosters a more rapid, organized, and manageable administrative workflow
 
-# Project Scope
+## Project Scope
 The scope of this project covers the end-to-end digitization of the clearance workflow for University Students, Professors, and University Staff.
 
 In-Scope (Core Features):
@@ -16,7 +16,7 @@ In-Scope (Core Features):
 •Faculty Notifications: Dashboard-based alert systems for administrators to prevent missed notifications.
 •Data Processing: Managing four primary entities: Student Demographics, Departmental Profiles, Clearance Transactions, and System Users.
 
-# Out-of-Scope (Future Enhancements):
+## Out-of-Scope (Future Enhancements):
 •Dedicated Mobile Companion Application.
 •Inclusive HCI and Accessibility Modes (Voice-guided navigation, screen readers).
 •Administrative Bottleneck Analytics dashboards.
