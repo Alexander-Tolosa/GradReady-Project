@@ -1,1 +1,1 @@
-# GradReady: A Student Clearance Tracking Application for the University of San Agustin
+# GradReady: Student Clearance Tracking Application for University of San Agustin
