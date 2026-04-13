@@ -45,8 +45,8 @@ Developed by BSIT students at the University of San Agustin.
 * Tailwind CSS
 
 **Backend & Database:**
-* Java (Spring Boot)
-* PostgreSQL (Supabase)
+* Java (+Spring Boot)
+* PostgreSQL (Hosted via Supabase)
 
 ## Architecture & Folder Structure
 ```text
