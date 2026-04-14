@@ -6,16 +6,16 @@
 
 ## Project Meaning & Scope
 
-The reliance on manual, paper-based student clearance workflows in many schools presents significant tracking challenges, resulting in lost documentation, ambiguous approval tracking, student confusion, and extended processing times.
+GradReady is a web application designed to completely digitize the student clearance process. Currently, schools rely on manual, paper-based workflows that are prone to lost documentation, confusing approval tracking, and long processing times. The meaning and core goal of this project is to eliminate these inefficiencies by providing a centralized platform where students can monitor their requirements and administrators can efficiently manage approvals, resulting in a much faster and more organized administrative workflow.
 
-GradReady addresses these inefficiencies by digitizing the student clearance process. By allowing users to configure specific requirements and systematically monitor their fulfillment status, the system fosters a more rapid, organized, and manageable administrative workflow.
+* **Target Users:** The system will support University Students, Professors, University Staff, and System Administrators.
+* **Clearance Tracking:** A visual "Matrix" for students to see their requirements across different departments (Library, Finance, etc.).
+* **Status Management:** A strict progression workflow (Pending -> Submitted -> Needs Revision -> Cleared) for updating requirements.   
+* **Administrative Control:** System Admins will have a secure "undo" function to fix administrative errors and will manage role-based access control.
+* **Notifications:** A dashboard-based "batch" alert system for System Admins and Department Heads to track updates.
+* **Information Directory:** A module indicating office availability, room numbers, and operating hours.
+* **Data Handling:** The system will process raw data inputs, validate roles, upload specific file types (PDF/JPEG under 25mb), and execute database mapping.
 
-* **Registration & Initialization:** Streamlines adding student names and clearance records into the system.
-* **Clearance Requirements Matrix:** Displays a dynamic list of clearance requirements across departments (e.g., Library, Guidance, Finance).
-* **Status Management Module:** Tracks requirement statuses through a granular progression (Pending -> Submitted -> Needs Revision -> Cleared) with a secure 'undo' function for administrative errors.
-* **Cumulative Clearance Summary:** Provides a top-level view of the overall clearance status for each student.
-* **Faculty Dashboard Notifications:** Implements a batch or dashboard-based alert system for administrators to ensure no clearance requests are missed.
-* **Role-Based Access Control (RBAC):** Ensures sensitive student records are compartmentalized and managed securely by authorized departmental staff.
 
 ## Team & Responsibilities
 
