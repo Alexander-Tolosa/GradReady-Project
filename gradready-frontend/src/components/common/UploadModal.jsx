@@ -5,11 +5,10 @@ const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/jpg'];
 const MAX_SIZE_MB = 25;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
-export default function UploadModal({ department, requirement, onClose, onUpload }) {
+export default function UploadModal({ department, requirement, onClose, onUpload, uploading }) {
   const [dragOver, setDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState(null);
-  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
 
   const validateFile = useCallback((file) => {
@@ -65,10 +64,7 @@ export default function UploadModal({ department, requirement, onClose, onUpload
 
   const handleSubmit = async () => {
     if (!selectedFile) return;
-    setUploading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
     onUpload(department.id, requirement.id, selectedFile);
-    setUploading(false);
   };
 
   const formatFileSize = (bytes) => {

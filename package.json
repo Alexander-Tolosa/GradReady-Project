@@ -1,0 +1,10 @@
+{
+  "name": "gradready-project-root",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix gradready-frontend",
+    "build": "npm run build --prefix gradready-frontend",
+    "preview": "npm run preview --prefix gradready-frontend",
+    "frontend:install": "npm install --prefix gradready-frontend"
+  }
+}
