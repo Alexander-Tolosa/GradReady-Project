@@ -41,39 +41,39 @@ export default function DepartmentCard({ department, onRequirementClick }) {
   const totalCount = department.requirements.length;
   const progressPercent = Math.round((clearedCount / totalCount) * 100);
 
-  const getDeptProgress = () => {
+  const getDeptStatus = () => {
     if (progressPercent === 100) return { text: 'Complete', color: 'text-status-cleared' };
-    if (progressPercent >= 50) return { text: 'In Progress', color: 'text-usa-gold' };
+    if (progressPercent >= 50) return { text: 'In Progress', color: 'text-status-revision' };
     return { text: 'Action Needed', color: 'text-status-missing' };
   };
 
-  const deptStatus = getDeptProgress();
+  const deptStatus = getDeptStatus();
 
   return (
-    <div className="glass-card overflow-hidden group" id={`dept-card-${department.id}`}>
+    <div className="card overflow-hidden" id={`dept-card-${department.id}`}>
       {/* Card Header */}
       <div
-        className="p-5 cursor-pointer select-none"
+        className="p-4 cursor-pointer select-none"
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">{department.icon}</span>
+            <span className="text-xl">{department.icon}</span>
             <div>
-              <h3 className="text-base font-body font-semibold text-white leading-tight">
+              <h3 className="text-sm font-semibold text-white leading-tight">
                 {department.name}
               </h3>
-              <p className="text-xs font-body text-white/30 mt-0.5">{department.head}</p>
+              <p className="text-xs text-zinc-500 mt-0.5">{department.head}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className={`text-xs font-body font-semibold ${deptStatus.color}`}>
+            <span className={`text-xs font-medium ${deptStatus.color}`}>
               {deptStatus.text}
             </span>
             {expanded ? (
-              <ChevronUp className="w-4 h-4 text-white/30" />
+              <ChevronUp className="w-4 h-4 text-zinc-600" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-white/30" />
+              <ChevronDown className="w-4 h-4 text-zinc-600" />
             )}
           </div>
         </div>
@@ -81,10 +81,10 @@ export default function DepartmentCard({ department, onRequirementClick }) {
         {/* Mini Progress Bar */}
         <div className="mt-3">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-body text-white/40">
+            <span className="text-[11px] text-zinc-500">
               {clearedCount}/{totalCount} cleared
             </span>
-            <span className="text-[11px] font-body text-white/40">{progressPercent}%</span>
+            <span className="text-[11px] text-zinc-500">{progressPercent}%</span>
           </div>
           <div className="progress-bar-track">
             <div
@@ -98,7 +98,7 @@ export default function DepartmentCard({ department, onRequirementClick }) {
       {/* Requirements List */}
       {expanded && (
         <div className="px-3 pb-3 animate-slide-down">
-          <div className="bg-white/[0.02] rounded-xl overflow-hidden">
+          <div className="bg-[#111114] rounded-lg overflow-hidden">
             {department.requirements.map((req, index) => {
               const config = statusConfig[req.status];
               const StatusIcon = config.icon;
@@ -109,20 +109,20 @@ export default function DepartmentCard({ department, onRequirementClick }) {
                   key={req.id}
                   className={`requirement-row ${isClickable ? 'clickable' : ''} ${
                     index !== department.requirements.length - 1
-                      ? 'border-b border-white/[0.03]'
+                      ? 'border-b border-[#1e1e21]'
                       : ''
                   }`}
                   onClick={() => isClickable && onRequirementClick(req)}
                   id={`req-${req.id}`}
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${config.dotColor}`} />
+                    <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${config.dotColor}`} />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-body text-white/80 truncate">
+                      <p className="text-sm text-zinc-300 truncate">
                         {req.description}
                       </p>
                       {req.revisionNote && (
-                        <p className="text-xs font-body text-status-revision/70 mt-0.5 truncate">
+                        <p className="text-xs text-status-revision/70 mt-0.5 truncate">
                           ⚠ {req.revisionNote}
                         </p>
                       )}

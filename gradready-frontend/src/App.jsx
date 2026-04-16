@@ -140,7 +140,7 @@ export default function App() {
       )
     );
     setSelectedRequirement(null);
-    showNotification(`✅ "${file.name}" uploaded successfully!`);
+    showNotification(`"${file.name}" uploaded successfully`);
   };
 
   const showNotification = (message) => {
@@ -149,57 +149,48 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f1a] relative">
-      {/* Ambient Background Effects */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-usa-maroon/10 rounded-full blur-[120px]" />
-        <div className="absolute top-1/3 -left-40 w-80 h-80 bg-usa-gold/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-usa-maroon/5 rounded-full blur-[100px]" />
-      </div>
-
+    <div className="min-h-screen bg-[#111114]">
       {/* Header */}
-      <header className="relative z-10 bg-gradient-to-r from-usa-maroon via-usa-maroon-light to-usa-maroon border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-5">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/10">
-                <GraduationCap className="w-7 h-7 text-usa-gold" />
+      <header className="bg-[#18181b] border-b border-[#27272a]">
+        <div className="w-full px-4 sm:px-6 lg:px-10">
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-maroon rounded-lg flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl sm:text-4xl text-white tracking-wider leading-none">
+                <h1 className="text-lg font-semibold text-white leading-none">
                   GradReady
                 </h1>
-                <p className="text-white/50 text-xs font-body tracking-wide mt-0.5">
+                <p className="text-zinc-500 text-xs mt-0.5">
                   University of San Agustin
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button
-                id="toggle-directory-btn"
-                onClick={() => setShowDirectory(!showDirectory)}
-                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-4 py-2.5 rounded-xl text-sm font-body font-medium transition-all duration-300 border border-white/10 hover:border-white/20"
-              >
-                {showDirectory ? (
-                  <>
-                    <Building2 className="w-4 h-4" />
-                    <span className="hidden sm:inline">Clearance Matrix</span>
-                  </>
-                ) : (
-                  <>
-                    <MapPin className="w-4 h-4" />
-                    <span className="hidden sm:inline">Office Directory</span>
-                  </>
-                )}
-              </button>
-            </div>
+            <button
+              id="toggle-directory-btn"
+              onClick={() => setShowDirectory(!showDirectory)}
+              className="flex items-center gap-2 bg-[#27272a] hover:bg-[#3f3f46] text-zinc-300 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              {showDirectory ? (
+                <>
+                  <Building2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Clearance Matrix</span>
+                </>
+              ) : (
+                <>
+                  <MapPin className="w-4 h-4" />
+                  <span className="hidden sm:inline">Office Directory</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="w-full px-4 sm:px-6 lg:px-10 py-6">
         {showDirectory ? (
           <div className="animate-fade-in">
             <InfoDirectory />
@@ -212,26 +203,26 @@ export default function App() {
             </div>
 
             {/* Progress Overview */}
-            <div className="mt-8 animate-slide-up">
+            <div className="mt-6 animate-fade-in">
               <ProgressOverview stats={stats} />
             </div>
 
             {/* Department Cards Grid */}
-            <div className="mt-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl text-white tracking-wider">
+            <div className="mt-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-white">
                   Clearance Matrix
                 </h2>
-                <span className="text-sm font-body text-white/40">
+                <span className="text-xs text-zinc-500">
                   {stats.clearedReqs}/{stats.totalReqs} requirements cleared
                 </span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {departments.map((dept, index) => (
                   <div
                     key={dept.id}
-                    className="animate-slide-up"
-                    style={{ animationDelay: `${index * 80}ms` }}
+                    className="animate-fade-in"
+                    style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <DepartmentCard
                       department={dept}
@@ -258,16 +249,19 @@ export default function App() {
       {/* Toast Notification */}
       {notification && (
         <div className="fixed bottom-6 right-6 z-50 animate-slide-up">
-          <div className="bg-[#1a1a2e] border border-status-cleared/30 text-status-cleared px-5 py-3.5 rounded-xl shadow-2xl font-body text-sm font-medium flex items-center gap-2">
+          <div className="bg-[#18181b] border border-[#27272a] text-status-cleared px-4 py-3 rounded-lg shadow-lg text-sm font-medium flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
             {notification}
           </div>
         </div>
       )}
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-white/5 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-body text-white/30">
+      <footer className="border-t border-[#27272a] mt-12">
+        <div className="w-full px-4 sm:px-6 lg:px-10 py-5">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600">
             <p>© 2025 GradReady — University of San Agustin, Iloilo City</p>
             <p>Student Clearance Tracking System v1.0</p>
           </div>

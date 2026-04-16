@@ -9,7 +9,6 @@ export default function ProgressOverview({ stats }) {
       icon: CheckCircle2,
       color: 'text-status-cleared',
       bg: 'bg-status-cleared/10',
-      border: 'border-status-cleared/20',
     },
     {
       label: 'Submitted',
@@ -17,7 +16,6 @@ export default function ProgressOverview({ stats }) {
       icon: Upload,
       color: 'text-status-submitted',
       bg: 'bg-status-submitted/10',
-      border: 'border-status-submitted/20',
     },
     {
       label: 'Pending',
@@ -25,7 +23,6 @@ export default function ProgressOverview({ stats }) {
       icon: Clock,
       color: 'text-status-pending',
       bg: 'bg-status-pending/10',
-      border: 'border-status-pending/20',
     },
     {
       label: 'Needs Revision',
@@ -33,7 +30,6 @@ export default function ProgressOverview({ stats }) {
       icon: AlertTriangle,
       color: 'text-status-revision',
       bg: 'bg-status-revision/10',
-      border: 'border-status-revision/20',
     },
     {
       label: 'Missing',
@@ -41,7 +37,6 @@ export default function ProgressOverview({ stats }) {
       icon: XCircle,
       color: 'text-status-missing',
       bg: 'bg-status-missing/10',
-      border: 'border-status-missing/20',
     },
   ];
 
@@ -52,18 +47,18 @@ export default function ProgressOverview({ stats }) {
         return (
           <div
             key={card.label}
-            className={`glass-card p-4 border ${card.border} hover:scale-[1.02]`}
+            className="card p-4"
             id={`stat-${card.label.toLowerCase().replace(/\s+/g, '-')}`}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl ${card.bg} flex items-center justify-center`}>
-                <Icon className={`w-5 h-5 ${card.color}`} />
+              <div className={`w-9 h-9 rounded-lg ${card.bg} flex items-center justify-center`}>
+                <Icon className={`w-4 h-4 ${card.color}`} />
               </div>
               <div>
-                <p className={`text-2xl font-heading ${card.color} leading-none`}>
+                <p className={`text-xl font-semibold ${card.color} leading-none`}>
                   {card.count}
                 </p>
-                <p className="text-[11px] font-body text-white/40 mt-0.5">{card.label}</p>
+                <p className="text-[11px] text-zinc-500 mt-0.5">{card.label}</p>
               </div>
             </div>
           </div>

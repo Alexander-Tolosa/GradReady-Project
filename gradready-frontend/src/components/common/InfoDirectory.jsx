@@ -87,19 +87,19 @@ export default function InfoDirectory() {
   return (
     <div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
         <div>
-          <h2 className="text-3xl text-white tracking-wider">
+          <h2 className="text-lg font-semibold text-white">
             Office Directory
           </h2>
-          <p className="text-sm font-body text-white/40 mt-1">
+          <p className="text-sm text-zinc-500 mt-0.5">
             Find office locations, contact details, and operating hours
           </p>
         </div>
 
         {/* Search */}
         <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <input
             type="text"
             placeholder="Search offices..."
@@ -112,51 +112,51 @@ export default function InfoDirectory() {
       </div>
 
       {/* Office Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {filteredOffices.map((office, index) => (
           <div
             key={office.id}
-            className="glass-card p-5 animate-slide-up"
-            style={{ animationDelay: `${index * 60}ms` }}
+            className="card p-4 animate-fade-in"
+            style={{ animationDelay: `${index * 40}ms` }}
             id={`office-${office.id}`}
           >
-            <div className="flex items-start justify-between mb-4">
+            <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-usa-maroon/20 flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-usa-gold" />
+                <div className="w-9 h-9 rounded-lg bg-maroon/20 flex items-center justify-center">
+                  <Building2 className="w-4 h-4 text-maroon-light" />
                 </div>
                 <div>
-                  <h3 className="text-base font-body font-semibold text-white">
+                  <h3 className="text-sm font-semibold text-white">
                     {office.name}
                   </h3>
-                  <p className="text-xs font-body text-white/30">{office.head}</p>
+                  <p className="text-xs text-zinc-500">{office.head}</p>
                 </div>
               </div>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-body font-semibold bg-status-cleared/10 text-status-cleared border border-status-cleared/20 uppercase tracking-wider">
-                <span className="w-1.5 h-1.5 rounded-full bg-status-cleared animate-pulse-soft" />
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-status-cleared/10 text-status-cleared uppercase tracking-wider">
+                <span className="w-1.5 h-1.5 rounded-full bg-status-cleared" />
                 Open
               </span>
             </div>
 
-            <div className="space-y-2.5">
-              <div className="flex items-start gap-2.5 text-sm font-body">
-                <MapPin className="w-4 h-4 text-white/20 flex-shrink-0 mt-0.5" />
+            <div className="space-y-2">
+              <div className="flex items-start gap-2 text-sm">
+                <MapPin className="w-3.5 h-3.5 text-zinc-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-white/60">{office.location}</span>
-                  <span className="text-white/30 ml-1">• {office.room}</span>
+                  <span className="text-zinc-400">{office.location}</span>
+                  <span className="text-zinc-600 ml-1">• {office.room}</span>
                 </div>
               </div>
-              <div className="flex items-start gap-2.5 text-sm font-body">
-                <Clock className="w-4 h-4 text-white/20 flex-shrink-0 mt-0.5" />
-                <span className="text-white/60">{office.hours}</span>
+              <div className="flex items-start gap-2 text-sm">
+                <Clock className="w-3.5 h-3.5 text-zinc-600 flex-shrink-0 mt-0.5" />
+                <span className="text-zinc-400">{office.hours}</span>
               </div>
-              <div className="flex items-center gap-2.5 text-sm font-body">
-                <Phone className="w-4 h-4 text-white/20 flex-shrink-0" />
-                <span className="text-white/60">{office.phone}</span>
+              <div className="flex items-center gap-2 text-sm">
+                <Phone className="w-3.5 h-3.5 text-zinc-600 flex-shrink-0" />
+                <span className="text-zinc-400">{office.phone}</span>
               </div>
-              <div className="flex items-center gap-2.5 text-sm font-body">
-                <Mail className="w-4 h-4 text-white/20 flex-shrink-0" />
-                <span className="text-usa-gold/80 hover:text-usa-gold transition-colors cursor-pointer">
+              <div className="flex items-center gap-2 text-sm">
+                <Mail className="w-3.5 h-3.5 text-zinc-600 flex-shrink-0" />
+                <span className="text-zinc-400 hover:text-zinc-300 transition-colors cursor-pointer">
                   {office.email}
                 </span>
               </div>
@@ -167,8 +167,8 @@ export default function InfoDirectory() {
 
       {filteredOffices.length === 0 && (
         <div className="text-center py-16 animate-fade-in">
-          <Search className="w-12 h-12 text-white/10 mx-auto mb-3" />
-          <p className="text-white/30 font-body">No offices found matching "{searchQuery}"</p>
+          <Search className="w-10 h-10 text-zinc-700 mx-auto mb-3" />
+          <p className="text-zinc-500">No offices found matching "{searchQuery}"</p>
         </div>
       )}
     </div>
