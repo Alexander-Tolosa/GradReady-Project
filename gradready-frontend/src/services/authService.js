@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+export { supabase };
 
 export const authService = {
   async signUp(email, password, studentData) {
@@ -24,6 +25,82 @@ export const authService = {
 
       return authData.user;
     }
+  },
+
+  async signUpAdmin(email, password, adminData) {
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (authError) throw authError;
+
+    if (authData.user) {
+      const { error: profileError } = await supabase
+        .from('admins')
+        .insert([
+          {
+            id: authData.user.id,
+            ...adminData
+          }
+        ]);
+        
+      if (profileError) throw profileError;
+      return authData.user;
+    }
+  },
+
+  async signUpFaculty(email, password, facultyData) {
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (authError) throw authError;
+
+    if (authData.user) {
+      const { error: profileError } = await supabase
+        .from('faculty')
+        .insert([
+          {
+            id: authData.user.id,
+            ...facultyData
+          }
+        ]);
+        
+      if (profileError) throw profileError;
+      return authData.user;
+    }
+  },
+
+  async getUserRole(userId) {
+    if (!userId) return null;
+
+    // Check students
+    const { data: student } = await supabase
+      .from('students')
+      .select('id')
+      .eq('id', userId)
+      .single();
+    if (student) return 'student';
+
+    // Check admins
+    const { data: admin } = await supabase
+      .from('admins')
+      .select('id, role')
+      .eq('id', userId)
+      .single();
+    if (admin) return admin.role || 'admin';
+
+    // Check faculty
+    const { data: faculty } = await supabase
+      .from('faculty')
+      .select('id, role')
+      .eq('id', userId)
+      .single();
+    if (faculty) return faculty.role || 'faculty';
+
+    return null;
   },
 
   async signIn(email, password) {

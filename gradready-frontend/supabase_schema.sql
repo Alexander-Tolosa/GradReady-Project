@@ -15,11 +15,30 @@ CREATE TABLE IF NOT EXISTS public.students (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS public.admins (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    name TEXT,
+    employee_id TEXT UNIQUE,
+    department TEXT,
+    role TEXT DEFAULT 'admin',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS public.departments (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     icon TEXT,
     head TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.faculty (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    name TEXT,
+    employee_id TEXT UNIQUE,
+    department_id TEXT REFERENCES public.departments(id),
+    position TEXT,
+    role TEXT DEFAULT 'faculty',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -52,6 +71,8 @@ CREATE TABLE IF NOT EXISTS public.offices (
 
 -- 3. Enable RLS
 ALTER TABLE public.students ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.admins ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.faculty ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.departments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.requirements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.offices ENABLE ROW LEVEL SECURITY;
@@ -65,6 +86,16 @@ CREATE POLICY "Public offices are viewable by everyone." ON public.offices FOR S
 CREATE POLICY "Users can view own profile." ON public.students FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Users can insert own profile." ON public.students FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Users can update own profile." ON public.students FOR UPDATE USING (auth.uid() = id);
+
+-- Admins: Only the user can view/update their own profile
+CREATE POLICY "Admins can view own profile." ON public.admins FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Admins can insert own profile." ON public.admins FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Admins can update own profile." ON public.admins FOR UPDATE USING (auth.uid() = id);
+
+-- Faculty: Only the user can view/update their own profile
+CREATE POLICY "Faculty can view own profile." ON public.faculty FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Faculty can insert own profile." ON public.faculty FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Faculty can update own profile." ON public.faculty FOR UPDATE USING (auth.uid() = id);
 
 -- Requirements: Only the user can view/update their own requirements
 CREATE POLICY "Users can view own requirements." ON public.requirements FOR SELECT USING (auth.uid() = student_auth_id);
