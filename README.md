@@ -1,4 +1,4 @@
-# GradReady: Student Clearance Tracking Web Application for IT Student in University of San Agustin 
+# GradReady: Student Clearance Tracking Web Application for IT Students in University of San Agustin 
 
 ![Status](https://img.shields.io/badge/Status-Active_Development-brightgreen) ![Stack](https://img.shields.io/badge/Stack-React_|_Spring_Boot_|_PostgreSQL-blue)
 
