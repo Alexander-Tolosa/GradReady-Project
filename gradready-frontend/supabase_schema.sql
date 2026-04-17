@@ -1,6 +1,6 @@
 -- SUPABASE SCHEMA SETUP FOR GRADREADY
 
--- 1. Enable pgcrypto (if not already enabled)
+-- 1. Enable pgcrypto
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- 2. Create tables
@@ -42,13 +42,12 @@ CREATE TABLE IF NOT EXISTS public.faculty (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Note: student_id links to students table id for tracking per-student requirements
 CREATE TABLE IF NOT EXISTS public.requirements (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     department_id TEXT REFERENCES public.departments(id),
     student_auth_id UUID REFERENCES public.students(id) ON DELETE CASCADE,
     description TEXT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'pending', -- pending, submitted, missing, needs_revision, cleared
+    status TEXT NOT NULL DEFAULT 'pending',
     due_date DATE,
     revision_note TEXT,
     uploaded_file_url TEXT,
@@ -77,36 +76,59 @@ ALTER TABLE public.departments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.requirements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.offices ENABLE ROW LEVEL SECURITY;
 
--- 4. Create RLS Policies
--- Departments & Offices: Everyone can read
+-- 4. Drop ALL existing policies first (safe to re-run)
+DROP POLICY IF EXISTS "Public profiles are viewable by everyone." ON public.departments;
+DROP POLICY IF EXISTS "Public offices are viewable by everyone." ON public.offices;
+
+DROP POLICY IF EXISTS "Users can view own profile." ON public.students;
+DROP POLICY IF EXISTS "Users can insert own profile." ON public.students;
+DROP POLICY IF EXISTS "Users can update own profile." ON public.students;
+
+DROP POLICY IF EXISTS "Admins can view own profile." ON public.admins;
+DROP POLICY IF EXISTS "Admins can insert own profile." ON public.admins;
+DROP POLICY IF EXISTS "Admins can update own profile." ON public.admins;
+
+DROP POLICY IF EXISTS "Faculty can view own profile." ON public.faculty;
+DROP POLICY IF EXISTS "Faculty can insert own profile." ON public.faculty;
+DROP POLICY IF EXISTS "Faculty can update own profile." ON public.faculty;
+
+DROP POLICY IF EXISTS "Users can view own requirements." ON public.requirements;
+DROP POLICY IF EXISTS "Users can insert own requirements." ON public.requirements;
+DROP POLICY IF EXISTS "Users can update own requirements." ON public.requirements;
+
+DROP POLICY IF EXISTS "Authenticated users can upload documents" ON storage.objects;
+DROP POLICY IF EXISTS "Documents are publically viewable" ON storage.objects;
+DROP POLICY IF EXISTS "Users can update own documents" ON storage.objects;
+
+-- 5. Recreate all policies
+-- Departments & Offices
 CREATE POLICY "Public profiles are viewable by everyone." ON public.departments FOR SELECT USING (true);
 CREATE POLICY "Public offices are viewable by everyone." ON public.offices FOR SELECT USING (true);
 
--- Students: Only the user can view/update their own profile
+-- Students
 CREATE POLICY "Users can view own profile." ON public.students FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Users can insert own profile." ON public.students FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Users can update own profile." ON public.students FOR UPDATE USING (auth.uid() = id);
 
--- Admins: Only the user can view/update their own profile
+-- Admins
 CREATE POLICY "Admins can view own profile." ON public.admins FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Admins can insert own profile." ON public.admins FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Admins can update own profile." ON public.admins FOR UPDATE USING (auth.uid() = id);
 
--- Faculty: Only the user can view/update their own profile
+-- Faculty
 CREATE POLICY "Faculty can view own profile." ON public.faculty FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Faculty can insert own profile." ON public.faculty FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Faculty can update own profile." ON public.faculty FOR UPDATE USING (auth.uid() = id);
 
--- Requirements: Only the user can view/update their own requirements
+-- Requirements
 CREATE POLICY "Users can view own requirements." ON public.requirements FOR SELECT USING (auth.uid() = student_auth_id);
 CREATE POLICY "Users can insert own requirements." ON public.requirements FOR INSERT WITH CHECK (auth.uid() = student_auth_id);
 CREATE POLICY "Users can update own requirements." ON public.requirements FOR UPDATE USING (auth.uid() = student_auth_id);
 
--- 5. Storage setup for clearance documents
+-- 6. Storage
 INSERT INTO storage.buckets (id, name, public) VALUES ('clearance-documents', 'clearance-documents', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Storage policies
 CREATE POLICY "Authenticated users can upload documents"
 ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'clearance-documents');
 CREATE POLICY "Documents are publically viewable"
@@ -114,8 +136,7 @@ ON storage.objects FOR SELECT USING (bucket_id = 'clearance-documents');
 CREATE POLICY "Users can update own documents"
 ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'clearance-documents');
 
-
--- 6. Insert Seed Data for Departments & Offices
+-- 7. Seed Data
 INSERT INTO public.departments (id, name, icon, head) VALUES
 ('library', 'University Library', '📚', 'Ms. Elena R. Santos'),
 ('registrar', 'Registrar''s Office', '📋', 'Dr. Marco L. Villanueva'),
