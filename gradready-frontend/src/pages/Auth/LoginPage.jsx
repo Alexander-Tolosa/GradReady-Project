@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, Mail, Lock, Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react';
+import { GraduationCap, Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import { authService } from '../../services/authService';
 
 export default function LoginPage() {
@@ -34,11 +34,18 @@ export default function LoginPage() {
 
         <div className="relative z-10 flex flex-col justify-between p-12 xl:p-16 w-full">
           {/* Top */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-white font-semibold text-lg">GradReady</span>
             </div>
-            <span className="text-white font-semibold text-lg">GradReady</span>
+            
+            <Link to="/" className="text-zinc-400 hover:text-white flex items-center gap-2 text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              Change Role
+            </Link>
           </div>
 
           {/* Center */}
@@ -80,11 +87,16 @@ export default function LoginPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-[420px]">
           {/* Mobile branding */}
-          <div className="flex items-center gap-3 mb-10 lg:hidden">
-            <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between mb-10 lg:hidden">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-white font-semibold text-lg">GradReady</span>
             </div>
-            <span className="text-white font-semibold text-lg">GradReady</span>
+            <Link to="/" className="text-zinc-400 hover:text-white">
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
           </div>
 
           <div className="mb-8">

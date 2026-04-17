@@ -84,11 +84,18 @@ export default function SignUpPage() {
         <div className="absolute bottom-1/3 left-10 w-72 h-72 bg-maroon/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '1s' }} />
 
         <div className="relative z-10 flex flex-col justify-between p-12 xl:p-16 w-full">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-white font-semibold text-lg">GradReady</span>
             </div>
-            <span className="text-white font-semibold text-lg">GradReady</span>
+            
+            <Link to="/" className="text-zinc-400 hover:text-white flex items-center gap-2 text-sm transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              Change Role
+            </Link>
           </div>
 
           <div>
@@ -125,11 +132,16 @@ export default function SignUpPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-[420px]">
           {/* Mobile branding */}
-          <div className="flex items-center gap-3 mb-10 lg:hidden">
-            <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
+          <div className="flex items-center justify-between mb-10 lg:hidden">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-white font-semibold text-lg">GradReady</span>
             </div>
-            <span className="text-white font-semibold text-lg">GradReady</span>
+            <Link to="/" className="text-zinc-400 hover:text-white">
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
           </div>
 
           {/* Step indicator (mobile) */}
