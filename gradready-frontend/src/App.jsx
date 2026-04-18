@@ -15,37 +15,75 @@ export default function App() {
   const [session, setSession] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);  // ← NEW: surface errors to UI
 
   useEffect(() => {
+    let cancelled = false;  // ← NEW: prevent stale state updates on unmount
+
     async function initializeSession() {
       try {
         const s = await authService.getSession();
+        if (cancelled) return;
+
         setSession(s);
+
         if (s?.user) {
           const role = await authService.getUserRole(s.user.id);
+          if (cancelled) return;
           setUserRole(role);
         }
       } catch (err) {
-        console.error('Failed to get session', err);
+        if (!cancelled) {
+          console.error('Failed to get session', err);
+          setError('Failed to load session. Please refresh the page.');  // ← NEW
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
+
     initializeSession();
 
     const { data: { subscription } } = authService.onAuthStateChange(async (_event, s) => {
+      if (cancelled) return;  // ← NEW: guard here too
       setSession(s);
+
       if (s?.user) {
-        const role = await authService.getUserRole(s.user.id);
-        setUserRole(role);
+        try {
+          const role = await authService.getUserRole(s.user.id);
+          if (!cancelled) setUserRole(role);
+        } catch (err) {
+          console.error('Failed to fetch role on auth change:', err);
+        }
       } else {
         setUserRole(null);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      cancelled = true;       // ← NEW: cancel on unmount
+      subscription.unsubscribe();
+    };
   }, []);
 
+  // ── Error state ──────────────────────────────────────────────────────────────
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#111114] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 text-center px-4">
+          <p className="text-red-400 text-sm">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-xs text-zinc-500 underline hover:text-zinc-300 transition-colors"
+          >
+            Refresh page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Loading state ─────────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="min-h-screen bg-[#111114] flex items-center justify-center">
@@ -57,45 +95,56 @@ export default function App() {
     );
   }
 
-  // Dashboard routing helper based on role
+  // ── Role-based dashboard redirect helper ──────────────────────────────────────
   const getDashboardPath = () => {
     if (!userRole) return '/';
     if (userRole === 'admin') return '/admin/dashboard';
     if (userRole === 'faculty') return '/faculty/dashboard';
-    return '/dashboard'; // student default
+    return '/dashboard';
   };
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* Auth Routes */}
+        {/* Role select / home */}
         <Route path="/" element={!session ? <RoleSelectPage /> : <Navigate to={getDashboardPath()} replace />} />
-        
+
         {/* Student Auth */}
-        <Route path="/login" element={!session ? <LoginPage /> : <Navigate to={getDashboardPath()} replace />} />
+        <Route path="/login"  element={!session ? <LoginPage />  : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/signup" element={!session ? <SignUpPage /> : <Navigate to={getDashboardPath()} replace />} />
 
         {/* Admin Auth */}
-        <Route path="/admin/login" element={!session ? <AdminLoginPage /> : <Navigate to={getDashboardPath()} replace />} />
+        <Route path="/admin/login"  element={!session ? <AdminLoginPage />  : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/admin/signup" element={!session ? <AdminSignUpPage /> : <Navigate to={getDashboardPath()} replace />} />
 
         {/* Faculty Auth */}
-        <Route path="/faculty/login" element={!session ? <FacultyLoginPage /> : <Navigate to={getDashboardPath()} replace />} />
+        <Route path="/faculty/login"  element={!session ? <FacultyLoginPage />  : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/faculty/signup" element={!session ? <FacultySignUpPage /> : <Navigate to={getDashboardPath()} replace />} />
 
-        {/* Dashboards (Role protected) */}
-        <Route 
-          path="/dashboard" 
-          element={session && userRole === 'student' ? <Dashboard session={session} /> : <Navigate to="/login" replace />} 
+        {/* Dashboards — role-protected */}
+        <Route
+          path="/dashboard"
+          element={
+            session && userRole === 'student'
+              ? <Dashboard session={session} />
+              : <Navigate to="/login" replace />
+          }
         />
-
-        <Route 
-          path="/admin/dashboard" 
-          element={session && userRole === 'admin' ? <AdminDashboard session={session} /> : <Navigate to="/admin/login" replace />} 
+        <Route
+          path="/admin/dashboard"
+          element={
+            session && userRole === 'admin'
+              ? <AdminDashboard session={session} />
+              : <Navigate to="/admin/login" replace />
+          }
         />
-        <Route 
-          path="/faculty/dashboard" 
-          element={session && userRole === 'faculty' ? <div className="text-white p-10">Faculty Dashboard (Coming Soon)</div> : <Navigate to="/faculty/login" replace />} 
+        <Route
+          path="/faculty/dashboard"
+          element={
+            session && userRole === 'faculty'
+              ? <div className="text-white p-10">Faculty Dashboard (Coming Soon)</div>
+              : <Navigate to="/faculty/login" replace />
+          }
         />
 
         {/* Fallback */}
@@ -104,3 +153,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
