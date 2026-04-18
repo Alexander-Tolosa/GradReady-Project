@@ -31,16 +31,16 @@ export default function RoleSelectPage() {
         {/* Roles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-16">
           {/* Student */}
-          <RoleCard 
+          <RoleCard
             to="/login"
             icon={GraduationCap}
             title="Student"
             description="Track your clearance requirements and upload documents."
             delay={0.2}
           />
-          
+
           {/* Faculty */}
-          <RoleCard 
+          <RoleCard
             to="/faculty/login"
             icon={BookOpen}
             title="Faculty"
@@ -49,7 +49,7 @@ export default function RoleSelectPage() {
           />
 
           {/* Admin */}
-          <RoleCard 
+          <RoleCard
             to="/admin/login"
             icon={Shield}
             title="Administrator"
@@ -60,7 +60,7 @@ export default function RoleSelectPage() {
 
         {/* Footer */}
         <p className="text-zinc-600 text-sm animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
-          © 2025 University of San Agustin · Iloilo City
+          © 2026 University of San Agustin · Iloilo City
         </p>
       </div>
     </div>
@@ -69,7 +69,7 @@ export default function RoleSelectPage() {
 
 function RoleCard({ to, icon: Icon, title, description, delay }) {
   return (
-    <Link 
+    <Link
       to={to}
       className="group bg-[#18181b]/80 backdrop-blur-sm border border-[#27272a] rounded-2xl p-8 hover:border-maroon/50 hover:bg-[#1c1c20] transition-all duration-300 flex flex-col items-center text-center animate-slide-up"
       style={{ animationDelay: `${delay}s`, animationFillMode: 'both' }}

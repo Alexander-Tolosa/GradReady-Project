@@ -41,7 +41,7 @@ export default function FacultyLoginPage() {
               </div>
               <span className="text-white font-semibold text-lg">GradReady Faculty</span>
             </div>
-            
+
             <Link to="/" className="text-zinc-400 hover:text-white flex items-center gap-2 text-sm transition-colors">
               <ArrowLeft className="w-4 h-4" />
               Change Role
@@ -74,7 +74,7 @@ export default function FacultyLoginPage() {
 
           {/* Bottom */}
           <p className="text-zinc-600 text-xs">
-            © 2025 University of San Agustin · Iloilo City
+            © 2026 University of San Agustin · Iloilo City
           </p>
         </div>
       </div>
