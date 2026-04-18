@@ -8,6 +8,7 @@ import AdminSignUpPage from './pages/Auth/AdminSignUpPage';
 import FacultyLoginPage from './pages/Auth/FacultyLoginPage';
 import FacultySignUpPage from './pages/Auth/FacultySignUpPage';
 import Dashboard from './pages/Student/Dashboard';
+import AdminDashboard from './pages/Admin/Dashboard';
 import { authService } from './services/authService';
 
 export default function App() {
@@ -87,9 +88,10 @@ export default function App() {
           path="/dashboard" 
           element={session && userRole === 'student' ? <Dashboard session={session} /> : <Navigate to="/login" replace />} 
         />
+
         <Route 
           path="/admin/dashboard" 
-          element={session && userRole === 'admin' ? <div className="text-white p-10">Admin Dashboard (Coming Soon)</div> : <Navigate to="/admin/login" replace />} 
+          element={session && userRole === 'admin' ? <AdminDashboard session={session} /> : <Navigate to="/admin/login" replace />} 
         />
         <Route 
           path="/faculty/dashboard" 

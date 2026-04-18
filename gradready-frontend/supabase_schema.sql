@@ -115,6 +115,19 @@ CREATE POLICY "Admins can view own profile." ON public.admins FOR SELECT USING (
 CREATE POLICY "Admins can insert own profile." ON public.admins FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Admins can update own profile." ON public.admins FOR UPDATE USING (auth.uid() = id);
 
+-- Admins specific access policies
+CREATE POLICY "Admins can view all requirements."
+  ON public.requirements FOR SELECT
+  USING (EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid()));
+
+CREATE POLICY "Admins can update all requirements."
+  ON public.requirements FOR UPDATE
+  USING (EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid()));
+
+CREATE POLICY "Admins can view all students."
+  ON public.students FOR SELECT
+  USING (EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid()));
+
 -- Faculty
 CREATE POLICY "Faculty can view own profile." ON public.faculty FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Faculty can insert own profile." ON public.faculty FOR INSERT WITH CHECK (auth.uid() = id);
