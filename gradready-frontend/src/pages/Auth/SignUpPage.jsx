@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, Mail, Lock, Eye, EyeOff, User, Hash, BookOpen, Calendar, ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, Mail, Lock, Eye, EyeOff, User, Hash, BookOpen, Calendar, Users, ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { authService } from '../../services/authService';
 
 const PROGRAMS = [
@@ -32,6 +32,7 @@ export default function SignUpPage() {
   const [studentId, setStudentId] = useState('');
   const [program, setProgram] = useState(PROGRAMS[0]);
   const [yearLevel, setYearLevel] = useState('4th Year');
+  const [section, setSection] = useState('');
   const [college, setCollege] = useState('College of Information Technology Education');
 
   const handleStep1 = (e) => {
@@ -59,6 +60,7 @@ export default function SignUpPage() {
         program,
         college,
         year_level: yearLevel,
+        section,
         semester: '2nd Semester, A.Y. 2024-2025',
       });
     } catch (err) {
@@ -310,6 +312,21 @@ export default function SignUpPage() {
                         <option key={y} value={y}>{y}</option>
                       ))}
                     </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="signup-section" className="block text-xs font-medium text-zinc-400 mb-2">Section</label>
+                  <div className="relative">
+                    <Users className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
+                    <input
+                      id="signup-section"
+                      type="text"
+                      value={section}
+                      onChange={(e) => setSection(e.target.value)}
+                      placeholder="e.g. A, B, C"
+                      className="w-full bg-[#18181b] border border-[#27272a] rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-maroon focus:ring-1 focus:ring-maroon/50 outline-none transition-all"
+                    />
                   </div>
                 </div>
 

@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS public.students (
     program TEXT,
     college TEXT,
     year_level TEXT,
+    section TEXT,
     semester TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

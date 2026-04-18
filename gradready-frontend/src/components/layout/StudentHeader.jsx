@@ -31,11 +31,11 @@ export default function StudentHeader({ student, stats }) {
           <div className="flex flex-wrap gap-x-5 gap-y-1.5 mt-2.5">
             <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
               <Hash className="w-3.5 h-3.5" />
-              <span>{student.studentId}</span>
+              <span>{student.student_id || 'N/A'}</span>
             </div>
             <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
               <BookOpen className="w-3.5 h-3.5" />
-              <span>{student.yearLevel}</span>
+              <span>{student.year_level || 'N/A'}{student.section ? ` — Section ${student.section}` : ''}</span>
             </div>
             <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
               <Calendar className="w-3.5 h-3.5" />
