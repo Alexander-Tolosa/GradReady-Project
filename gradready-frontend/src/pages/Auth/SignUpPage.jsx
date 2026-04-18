@@ -123,7 +123,7 @@ export default function SignUpPage() {
           </div>
 
           <p className="text-zinc-600 text-xs">
-            © 2025 University of San Agustin · Iloilo City
+            © 2026 University of San Agustin · Iloilo City
           </p>
         </div>
       </div>

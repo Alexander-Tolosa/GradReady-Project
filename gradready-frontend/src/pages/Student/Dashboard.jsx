@@ -199,7 +199,7 @@ export default function Dashboard({ session }) {
       <footer className="border-t border-[#27272a] mt-12">
         <div className="w-full px-4 sm:px-6 lg:px-10 py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600">
-            <p>© 2025 GradReady — University of San Agustin, Iloilo City</p>
+            <p>© 2026 GradReady — University of San Agustin, Iloilo City</p>
             <p>Student Clearance Tracking System v1.0</p>
           </div>
         </div>
