@@ -7,4 +7,11 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error(`Missing Supabase config — URL: ${supabaseUrl}, KEY exists: ${!!supabaseKey}`);
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: true,
+    storageKey: 'gradready-auth',
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  }
+});
