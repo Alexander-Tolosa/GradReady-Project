@@ -6,5 +6,8 @@
     "build": "npm run build --prefix gradready-frontend",
     "preview": "npm run preview --prefix gradready-frontend",
     "frontend:install": "npm install --prefix gradready-frontend"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.3"
   }
 }
