@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Users, Layers, LogOut, Loader2 } from 'lucide-react';
+import { Users, Layers, LogOut, Loader2 } from 'lucide-react';
 import AdminHeader from '../../components/layout/AdminHeader';
 import AdminStatsOverview from '../../components/common/AdminStatsOverview';
 import DepartmentCard from '../../components/common/DepartmentCard';
@@ -50,9 +50,7 @@ export default function Dashboard({ session }) {
         <div className="w-full px-4 sm:px-6 lg:px-10">
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-maroon rounded-lg flex items-center justify-center">
-                <Shield className="w-5 h-5 text-white" />
-              </div>
+              <img src="/images/usa-seal.png" alt="USA Seal" className="w-9 h-9 rounded-lg object-contain" />
               <div>
                 <h1 className="text-lg font-semibold text-white leading-none">GradReady System</h1>
                 <p className="text-zinc-500 text-xs mt-0.5">Admin Portal</p>

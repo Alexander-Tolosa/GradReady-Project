@@ -13,9 +13,7 @@ export default function RoleSelectPage() {
       <div className="relative z-10 w-full max-w-4xl flex flex-col items-center">
         {/* Header */}
         <div className="flex items-center gap-3 mb-12 animate-fade-in">
-          <div className="w-12 h-12 bg-maroon rounded-xl flex items-center justify-center shadow-lg shadow-maroon/20">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
+          <img src="/images/usa-seal.png" alt="USA Seal" className="w-12 h-12 rounded-xl object-contain shadow-lg shadow-maroon/20" />
           <span className="text-white font-bold text-2xl tracking-tight">GradReady</span>
         </div>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Building2, MapPin, GraduationCap, LogOut, Loader2 } from 'lucide-react';
+import { Building2, MapPin, LogOut, Loader2 } from 'lucide-react';
 import StudentHeader from '../../components/layout/StudentHeader';
 import DepartmentCard from '../../components/common/DepartmentCard';
 import ProgressOverview from '../../components/common/ProgressOverview';
@@ -89,9 +89,7 @@ export default function Dashboard({ session }) {
         <div className="w-full px-4 sm:px-6 lg:px-10">
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-maroon rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
+              <img src="/images/usa-seal.png" alt="USA Seal" className="w-9 h-9 rounded-lg object-contain" />
               <div>
                 <h1 className="text-lg font-semibold text-white leading-none">GradReady</h1>
                 <p className="text-zinc-500 text-xs mt-0.5">University of San Agustin</p>

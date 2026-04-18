@@ -94,9 +94,7 @@ export default function FacultySignUpPage() {
         <div className="relative z-10 flex flex-col justify-between p-12 xl:p-16 w-full">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
+              <img src="/images/usa-seal.png" alt="USA Seal" className="w-10 h-10 rounded-xl object-contain" />
               <span className="text-white font-semibold text-lg">GradReady Faculty</span>
             </div>
 
@@ -142,9 +140,7 @@ export default function FacultySignUpPage() {
           {/* Mobile branding */}
           <div className="flex items-center justify-between mb-10 lg:hidden">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-maroon rounded-xl flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
+              <img src="/images/usa-seal.png" alt="USA Seal" className="w-10 h-10 rounded-xl object-contain" />
               <span className="text-white font-semibold text-lg">Faculty Portal</span>
             </div>
             <Link to="/" className="text-zinc-400 hover:text-white">
