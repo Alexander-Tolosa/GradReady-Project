@@ -187,7 +187,7 @@ export default function SignUpPage() {
                       className="w-full bg-[#18181b] border border-[#27272a] rounded-xl pl-11 pr-12 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-maroon focus:ring-1 focus:ring-maroon/50 outline-none transition-all"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-400 transition-colors">
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                     </button>
                   </div>
                   {/* Password strength bar */}
