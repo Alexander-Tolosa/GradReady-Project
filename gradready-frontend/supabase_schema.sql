@@ -188,8 +188,7 @@ INSERT INTO public.departments (id, name, icon, head) VALUES
 ('dean', 'Dean''s Office (CITE)', '🎓', 'Dr. Anna Mae T. Cruz'),
 ('accounting', 'Accounting Office', '💰', 'Mr. Roberto A. Domingo'),
 ('student-affairs', 'Student Affairs Office', '🤝', 'Ms. Patricia G. Reyes'),
-('it-office', 'IT Office', '💻', 'Academic Supervisor
-Dr. Eleanor M. Vance')
+('it-office', 'IT Office', '💻', 'Dr. Eleanor M. Vance')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.offices (id, name, location, room, hours, phone, email, head, status) VALUES

@@ -62,9 +62,10 @@ export default function DepartmentCard({ department, onRequirementClick }) {
               <h3 className="text-sm font-semibold text-white leading-tight">
                 {department.name}
               </h3>
-              {department.head && department.head.split('\n').map((line, i) => (
-                <p key={i} className="text-xs text-zinc-500 mt-0.5">{line}</p>
-              ))}
+              {department.id === 'it-office' && (
+                <p className="text-xs text-zinc-500 mt-0.5">Academic Supervisor</p>
+              )}
+              <p className="text-xs text-zinc-500 mt-0.5">{department.head}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
