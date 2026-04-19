@@ -188,8 +188,8 @@ INSERT INTO public.departments (id, name, icon, head) VALUES
 ('dean', 'Dean''s Office (CITE)', '🎓', 'Dr. Anna Mae T. Cruz'),
 ('accounting', 'Accounting Office', '💰', 'Mr. Roberto A. Domingo'),
 ('student-affairs', 'Student Affairs Office', '🤝', 'Ms. Patricia G. Reyes'),
-('academic-supervisor', 'Academic Supervisor', '👨‍🏫', 'Dr. Jose M. Dela Rosa'),
-('it-office', 'IT Office', '💻', 'Dr. Jose M. Dela Rosa')
+('it-office', 'IT Office', '💻', 'Academic Supervisor
+Dr. Eleanor M. Vance')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.offices (id, name, location, room, hours, phone, email, head, status) VALUES
@@ -198,11 +198,13 @@ INSERT INTO public.offices (id, name, location, room, hours, phone, email, head,
 ('dean', 'Dean''s Office (CITE)', 'CITE Building, 3rd Floor', 'Room 301', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 301', 'cite.dean@usa.edu.ph', 'Dr. Anna Mae T. Cruz', 'open'),
 ('accounting', 'Accounting Office', 'Administration Building, Ground Floor', 'Room 103-104', 'Mon–Fri: 8:00 AM – 4:30 PM', '(033) 337-4841 loc. 103', 'accounting@usa.edu.ph', 'Mr. Roberto A. Domingo', 'open'),
 ('student-affairs', 'Student Affairs Office', 'Student Center, 2nd Floor', 'Room 210', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 210', 'studentaffairs@usa.edu.ph', 'Ms. Patricia G. Reyes', 'open'),
-('academic-supervisor', 'Academic Supervisor', 'CITE Building, 2nd Floor', 'Room 202', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 202', 'academic.supervisor@usa.edu.ph', 'Dr. Jose M. Dela Rosa', 'open'),
-('it-office', 'IT Office', 'CITE Building, Ground Floor', 'Room 105', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 105', 'itoffice@usa.edu.ph', 'Dr. Jose M. Dela Rosa', 'open')
+('it-office', 'IT Office', 'CITE Building, Ground Floor', 'Room 105', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 105', 'itoffice@usa.edu.ph', 'Dr. Eleanor M. Vance', 'open')
 ON CONFLICT (id) DO NOTHING;
 
--- 8. Cleanup: Remove dormitory entries
+-- 8. Cleanup: Remove dormitory and academic-supervisor entries
 DELETE FROM public.requirements WHERE department_id = 'dormitory';
 DELETE FROM public.offices WHERE id = 'dormitory';
 DELETE FROM public.departments WHERE id = 'dormitory';
+DELETE FROM public.requirements WHERE department_id = 'academic-supervisor';
+DELETE FROM public.offices WHERE id = 'academic-supervisor';
+DELETE FROM public.departments WHERE id = 'academic-supervisor';

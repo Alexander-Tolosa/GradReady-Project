@@ -11,6 +11,8 @@ const DEFAULT_REQUIREMENTS = [
   { department_id: 'accounting', description: 'Full tuition payment', due_date: '2025-02-28' },
   { department_id: 'accounting', description: 'Lab fee settlement', due_date: '2025-03-01' },
   { department_id: 'student-affairs', description: 'Community service completion', due_date: '2025-03-05' },
+  { department_id: 'it-office', description: 'Thesis/Capstone approval', due_date: '2025-03-10' },
+  { department_id: 'it-office', description: 'Return borrowed IT equipment', due_date: '2025-03-12' },
 ];
 
 export const clearanceService = {
