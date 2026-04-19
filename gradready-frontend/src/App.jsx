@@ -9,6 +9,7 @@ import FacultyLoginPage from './pages/Auth/FacultyLoginPage';
 import FacultySignUpPage from './pages/Auth/FacultySignUpPage';
 import Dashboard from './pages/Student/Dashboard';
 import AdminDashboard from './pages/Admin/Dashboard';
+import FacultyDashboard from './pages/Faculty/Dashboard';
 import { authService } from './services/authService';
 
 export default function App() {
@@ -142,7 +143,7 @@ export default function App() {
           path="/faculty/dashboard"
           element={
             session && userRole === 'faculty'
-              ? <div className="text-white p-10">Faculty Dashboard (Coming Soon)</div>
+              ? <FacultyDashboard session={session} />
               : <Navigate to="/faculty/login" replace />
           }
         />

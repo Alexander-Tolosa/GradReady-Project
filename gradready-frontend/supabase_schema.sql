@@ -69,6 +69,16 @@ CREATE TABLE IF NOT EXISTS public.offices (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS public.notifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    type TEXT NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT false,
+    related_requirement_id UUID REFERENCES public.requirements(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- 3. Enable RLS
 ALTER TABLE public.students ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admins ENABLE ROW LEVEL SECURITY;
@@ -76,6 +86,7 @@ ALTER TABLE public.faculty ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.departments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.requirements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.offices ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 
 -- 4. Drop ALL existing policies first (safe to re-run)
 DROP POLICY IF EXISTS "Public profiles are viewable by everyone." ON public.departments;
@@ -100,6 +111,12 @@ DROP POLICY IF EXISTS "Users can update own requirements." ON public.requirement
 DROP POLICY IF EXISTS "Authenticated users can upload documents" ON storage.objects;
 DROP POLICY IF EXISTS "Documents are publically viewable" ON storage.objects;
 DROP POLICY IF EXISTS "Users can update own documents" ON storage.objects;
+
+DROP POLICY IF EXISTS "Users can view own notifications." ON public.notifications;
+DROP POLICY IF EXISTS "Users can insert own notifications." ON public.notifications;
+DROP POLICY IF EXISTS "Users can update own notifications." ON public.notifications;
+DROP POLICY IF EXISTS "Faculty can view department requirements." ON public.requirements;
+DROP POLICY IF EXISTS "Faculty can update department requirements." ON public.requirements;
 
 -- 5. Recreate all policies
 -- Departments & Offices
@@ -134,10 +151,24 @@ CREATE POLICY "Faculty can view own profile." ON public.faculty FOR SELECT USING
 CREATE POLICY "Faculty can insert own profile." ON public.faculty FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Faculty can update own profile." ON public.faculty FOR UPDATE USING (auth.uid() = id);
 
+-- Faculty specific access policies for requirements
+CREATE POLICY "Faculty can view department requirements."
+  ON public.requirements FOR SELECT
+  USING (EXISTS (SELECT 1 FROM public.faculty WHERE id = auth.uid() AND department_id = requirements.department_id));
+
+CREATE POLICY "Faculty can update department requirements."
+  ON public.requirements FOR UPDATE
+  USING (EXISTS (SELECT 1 FROM public.faculty WHERE id = auth.uid() AND department_id = requirements.department_id));
+
 -- Requirements
 CREATE POLICY "Users can view own requirements." ON public.requirements FOR SELECT USING (auth.uid() = student_auth_id);
 CREATE POLICY "Users can insert own requirements." ON public.requirements FOR INSERT WITH CHECK (auth.uid() = student_auth_id);
 CREATE POLICY "Users can update own requirements." ON public.requirements FOR UPDATE USING (auth.uid() = student_auth_id);
+
+-- Notifications
+CREATE POLICY "Users can view own notifications." ON public.notifications FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own notifications." ON public.notifications FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users can update own notifications." ON public.notifications FOR UPDATE USING (auth.uid() = user_id);
 
 -- 6. Storage
 INSERT INTO storage.buckets (id, name, public) VALUES ('clearance-documents', 'clearance-documents', true)

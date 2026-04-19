@@ -4,15 +4,21 @@ import AdminHeader from '../../components/layout/AdminHeader';
 import AdminStatsOverview from '../../components/common/AdminStatsOverview';
 import DepartmentCard from '../../components/common/DepartmentCard';
 import StudentRoster from '../../components/common/StudentRoster';
+import ManageRoles from '../../components/common/ManageRoles';
+import AdminNotifications from '../../components/common/AdminNotifications';
+import UndoStatusModal from '../../components/common/UndoStatusModal';
 import { authService } from '../../services/authService';
 import { adminService } from '../../services/adminService';
+import { notificationService } from '../../services/notificationService';
 
 export default function Dashboard({ session }) {
   const [loading, setLoading] = useState(true);
   const [adminData, setAdminData] = useState(null);
   const [systemData, setSystemData] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'roster'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'roster' | 'roles' | 'notifications'
   const [notification, setNotification] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     loadData();
@@ -26,6 +32,12 @@ export default function Dashboard({ session }) {
 
       const sysData = await adminService.fetchSystemData();
       setSystemData(sysData);
+
+      const allUsers = await adminService.fetchAllUsers();
+      setUsers(allUsers);
+
+      const sysNotifs = await notificationService.fetchNotifications();
+      setNotifications(sysNotifs);
     } catch (error) {
       console.error(error);
       showNotification('Error loading data: ' + error.message, true);
@@ -41,6 +53,16 @@ export default function Dashboard({ session }) {
   const showNotification = (message, isError = false) => {
     setNotification({ text: message, isError });
     setTimeout(() => setNotification(null), 4000);
+  };
+
+  const handleMarkAsRead = async () => {
+    try {
+      await notificationService.markAllAsRead();
+      const notifs = await notificationService.fetchNotifications();
+      setNotifications(notifs);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -74,6 +96,25 @@ export default function Dashboard({ session }) {
                   }`}
                 >
                    <Users className="w-4 h-4" /> Roster
+                </button>
+                <button
+                  onClick={() => setActiveTab('roles')}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    activeTab === 'roles' ? 'bg-[#3f3f46] text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
+                  }`}
+                >
+                   Roles
+                </button>
+                <button
+                  onClick={() => setActiveTab('notifications')}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors relative ${
+                    activeTab === 'notifications' ? 'bg-[#3f3f46] text-white shadow-sm' : 'text-zinc-400 hover:text-zinc-200'
+                  }`}
+                >
+                   Notifications
+                   {notifications?.filter(n => !n.is_read).length > 0 && (
+                     <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-maroon rounded-full border-2 border-[#27272a]"></span>
+                   )}
                 </button>
               </div>
 
@@ -124,6 +165,14 @@ export default function Dashboard({ session }) {
         ) : activeTab === 'roster' ? (
            <div className="animate-fade-in">
              <StudentRoster students={systemData?.mappedStudents} />
+           </div>
+        ) : activeTab === 'roles' ? (
+           <div className="animate-fade-in">
+             <ManageRoles users={users} />
+           </div>
+        ) : activeTab === 'notifications' ? (
+           <div className="animate-fade-in">
+             <AdminNotifications notifications={notifications} onMarkAsRead={handleMarkAsRead} />
            </div>
         ) : (
           <>

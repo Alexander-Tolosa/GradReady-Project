@@ -78,5 +78,50 @@ export const adminService = {
     });
 
     return { stats, mappedStudents, departmentData };
+  },
+
+  async fetchAllUsers() {
+    const [
+      { data: students },
+      { data: admins },
+      { data: faculty }
+    ] = await Promise.all([
+      supabase.from('students').select('id, name, created_at').order('name'),
+      supabase.from('admins').select('id, name, role, created_at').order('name'),
+      supabase.from('faculty').select('id, name, role, created_at').order('name')
+    ]);
+
+    const users = [
+      ...(students || []).map(s => ({ ...s, derivedRole: 'student' })),
+      ...(admins || []).map(a => ({ ...a, derivedRole: a.role || 'admin' })),
+      ...(faculty || []).map(f => ({ ...f, derivedRole: f.role || 'faculty' }))
+    ];
+    return users.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  },
+
+  async updateUserRole() {
+     // NOTE: User roles are determined by which table they are in.
+     // Moving a user requires deleting from one table and inserting to another.
+     // This is a complex secure operation that typically requires a backend function.
+     throw new Error("Role updates are currently disabled in the UI for security.");
+  },
+
+  async undoStatusChange(requirementId, prevStatus = 'pending') {
+    const { error } = await supabase
+      .from('requirements')
+      .update({ status: prevStatus, updated_at: new Date() })
+      .eq('id', requirementId);
+
+    if (error) throw error;
+  },
+
+  async batchClearRequirements(studentId) {
+    const { error } = await supabase
+      .from('requirements')
+      .update({ status: 'cleared', updated_at: new Date() })
+      .eq('student_auth_id', studentId)
+      .neq('status', 'cleared');
+
+    if (error) throw error;
   }
 };
