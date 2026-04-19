@@ -187,7 +187,9 @@ INSERT INTO public.departments (id, name, icon, head) VALUES
 ('registrar', 'Registrar''s Office', '📋', 'Dr. Marco L. Villanueva'),
 ('dean', 'Dean''s Office (CITE)', '🎓', 'Dr. Anna Mae T. Cruz'),
 ('accounting', 'Accounting Office', '💰', 'Mr. Roberto A. Domingo'),
-('student-affairs', 'Student Affairs Office', '🤝', 'Ms. Patricia G. Reyes')
+('student-affairs', 'Student Affairs Office', '🤝', 'Ms. Patricia G. Reyes'),
+('academic-supervisor', 'Academic Supervisor', '👨‍🏫', 'Dr. Jose M. Dela Rosa'),
+('it-office', 'IT Office', '💻', 'Dr. Jose M. Dela Rosa')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.offices (id, name, location, room, hours, phone, email, head, status) VALUES
@@ -195,7 +197,9 @@ INSERT INTO public.offices (id, name, location, room, hours, phone, email, head,
 ('registrar', 'Registrar''s Office', 'Administration Building, Ground Floor', 'Room 101', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 101', 'registrar@usa.edu.ph', 'Dr. Marco L. Villanueva', 'open'),
 ('dean', 'Dean''s Office (CITE)', 'CITE Building, 3rd Floor', 'Room 301', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 301', 'cite.dean@usa.edu.ph', 'Dr. Anna Mae T. Cruz', 'open'),
 ('accounting', 'Accounting Office', 'Administration Building, Ground Floor', 'Room 103-104', 'Mon–Fri: 8:00 AM – 4:30 PM', '(033) 337-4841 loc. 103', 'accounting@usa.edu.ph', 'Mr. Roberto A. Domingo', 'open'),
-('student-affairs', 'Student Affairs Office', 'Student Center, 2nd Floor', 'Room 210', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 210', 'studentaffairs@usa.edu.ph', 'Ms. Patricia G. Reyes', 'open')
+('student-affairs', 'Student Affairs Office', 'Student Center, 2nd Floor', 'Room 210', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 210', 'studentaffairs@usa.edu.ph', 'Ms. Patricia G. Reyes', 'open'),
+('academic-supervisor', 'Academic Supervisor', 'CITE Building, 2nd Floor', 'Room 202', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 202', 'academic.supervisor@usa.edu.ph', 'Dr. Jose M. Dela Rosa', 'open'),
+('it-office', 'IT Office', 'CITE Building, Ground Floor', 'Room 105', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 105', 'itoffice@usa.edu.ph', 'Dr. Jose M. Dela Rosa', 'open')
 ON CONFLICT (id) DO NOTHING;
 
 -- 8. Cleanup: Remove dormitory entries

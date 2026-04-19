@@ -23,7 +23,7 @@ export default function SignUpPage() {
   const [studentId, setStudentId] = useState('');
   const [program, setProgram] = useState(PROGRAMS[0]);
   const [yearLevel, setYearLevel] = useState('4th Year');
-  const [section, setSection] = useState('');
+  const [section, setSection] = useState('A');
   const [college, setCollege] = useState('College of Information Technology Education');
 
   const handleStep1 = (e) => {
@@ -310,14 +310,16 @@ export default function SignUpPage() {
                   <label htmlFor="signup-section" className="block text-xs font-medium text-zinc-400 mb-2">Section</label>
                   <div className="relative">
                     <Users className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
-                    <input
+                    <select
                       id="signup-section"
-                      type="text"
                       value={section}
                       onChange={(e) => setSection(e.target.value)}
-                      placeholder="e.g. A, B, C"
-                      className="w-full bg-[#18181b] border border-[#27272a] rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-maroon focus:ring-1 focus:ring-maroon/50 outline-none transition-all"
-                    />
+                      className="w-full bg-[#18181b] border border-[#27272a] rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:border-maroon focus:ring-1 focus:ring-maroon/50 outline-none transition-all appearance-none cursor-pointer"
+                    >
+                      {['A', 'B', 'C'].map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 

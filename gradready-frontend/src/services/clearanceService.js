@@ -57,7 +57,7 @@ export const clearanceService = {
 
   async fetchClearanceData() {
     // Note: Due to RLS, this automatically only fetches requirements for the logged-in user
-    const [ { data: departments, error: deptError }, { data: requirements, error: reqError } ] = await Promise.all([
+    const [{ data: departments, error: deptError }, { data: requirements, error: reqError }] = await Promise.all([
       supabase.from('departments').select('*').order('name'),
       supabase.from('requirements').select('*').order('due_date')
     ]);
@@ -89,7 +89,7 @@ export const clearanceService = {
       .from('offices')
       .select('*')
       .order('name');
-      
+
     if (error) throw error;
     return data;
   }
