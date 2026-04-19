@@ -156,8 +156,7 @@ INSERT INTO public.departments (id, name, icon, head) VALUES
 ('registrar', 'Registrar''s Office', '📋', 'Dr. Marco L. Villanueva'),
 ('dean', 'Dean''s Office (CITE)', '🎓', 'Dr. Anna Mae T. Cruz'),
 ('accounting', 'Accounting Office', '💰', 'Mr. Roberto A. Domingo'),
-('student-affairs', 'Student Affairs Office', '🤝', 'Ms. Patricia G. Reyes'),
-('dormitory', 'Dormitory Management', '🏠', 'Mr. Angelo J. Ferrer')
+('student-affairs', 'Student Affairs Office', '🤝', 'Ms. Patricia G. Reyes')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.offices (id, name, location, room, hours, phone, email, head, status) VALUES
@@ -165,6 +164,5 @@ INSERT INTO public.offices (id, name, location, room, hours, phone, email, head,
 ('registrar', 'Registrar''s Office', 'Administration Building, Ground Floor', 'Room 101', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 101', 'registrar@usa.edu.ph', 'Dr. Marco L. Villanueva', 'open'),
 ('dean', 'Dean''s Office (CITE)', 'CITE Building, 3rd Floor', 'Room 301', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 301', 'cite.dean@usa.edu.ph', 'Dr. Anna Mae T. Cruz', 'open'),
 ('accounting', 'Accounting Office', 'Administration Building, Ground Floor', 'Room 103-104', 'Mon–Fri: 8:00 AM – 4:30 PM', '(033) 337-4841 loc. 103', 'accounting@usa.edu.ph', 'Mr. Roberto A. Domingo', 'open'),
-('student-affairs', 'Student Affairs Office', 'Student Center, 2nd Floor', 'Room 210', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 210', 'studentaffairs@usa.edu.ph', 'Ms. Patricia G. Reyes', 'open'),
-('dormitory', 'Dormitory Management', 'Dormitory Building, Ground Floor', 'Room 001', 'Mon–Sat: 7:00 AM – 9:00 PM', '(033) 337-4841 loc. 400', 'dormitory@usa.edu.ph', 'Mr. Angelo J. Ferrer', 'open')
+('student-affairs', 'Student Affairs Office', 'Student Center, 2nd Floor', 'Room 210', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 210', 'studentaffairs@usa.edu.ph', 'Ms. Patricia G. Reyes', 'open')
 ON CONFLICT (id) DO NOTHING;

@@ -9,7 +9,6 @@ const DEPARTMENTS = [
   "Dean's Office (CITE)",
   'Accounting Office',
   'Student Affairs Office',
-  'Dormitory Management',
   'IT / System Administration'
 ];
 
