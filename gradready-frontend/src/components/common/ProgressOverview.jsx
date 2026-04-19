@@ -25,7 +25,7 @@ export default function ProgressOverview({ stats }) {
       bg: 'bg-status-pending/10',
     },
     {
-      label: 'Needs Revision',
+      label: 'Revision Needed',
       count: stats.revisionReqs,
       icon: AlertTriangle,
       color: 'text-status-revision',

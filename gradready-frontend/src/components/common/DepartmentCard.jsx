@@ -16,7 +16,7 @@ const statusConfig = {
   },
   needs_revision: {
     icon: AlertCircle,
-    label: 'Revision',
+    label: 'Revision Needed',
     className: 'status-revision',
     dotColor: 'bg-status-revision',
   },
