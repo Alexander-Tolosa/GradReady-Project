@@ -6,28 +6,65 @@ export default function InfoDirectory() {
   const [searchQuery, setSearchQuery] = useState('');
   const [offices, setOffices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let mounted = true;
     clearanceService.fetchOffices()
-      .then(data => { if (mounted) { setOffices(data); setLoading(false); } })
-      .catch(err => { console.error(err); setLoading(false); });
+      .then(data => {
+        if (mounted) {
+          setOffices(data || []);
+          setLoading(false);
+        }
+      })
+      .catch(err => {
+        console.error('Failed to load offices:', err);
+        if (mounted) {
+          setError(err.message || 'Failed to load office directory.');
+          setLoading(false);
+        }
+      });
     return () => { mounted = false; };
   }, []);
 
   const filteredOffices = useMemo(() => {
+    if (!offices || offices.length === 0) return [];
     if (!searchQuery.trim()) return offices;
     const query = searchQuery.toLowerCase();
     return offices.filter(
       (office) =>
-        office.name.toLowerCase().includes(query) ||
-        office.location.toLowerCase().includes(query) ||
-        office.head.toLowerCase().includes(query)
+        (office.name && office.name.toLowerCase().includes(query)) ||
+        (office.location && office.location.toLowerCase().includes(query)) ||
+        (office.head && office.head.toLowerCase().includes(query))
     );
   }, [searchQuery, offices]);
 
   if (loading) {
     return <div className="text-center py-20 text-zinc-500">Loading directory...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-status-missing mb-2">Unable to load office directory</p>
+        <p className="text-zinc-500 text-sm">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 rounded-lg bg-[#27272a] text-zinc-300 text-sm hover:bg-[#3f3f46] transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (offices.length === 0) {
+    return (
+      <div className="text-center py-20 text-zinc-500">
+        <p>No offices found in the directory.</p>
+        <p className="text-xs mt-2">Office data may not have been seeded yet. Please run the seed SQL in Supabase.</p>
+      </div>
+    );
   }
 
   return (

@@ -112,7 +112,7 @@ export default function AdminSignUpPage() {
           </div>
 
           <p className="text-zinc-600 text-xs">
-            © 2026 University of San Agustin · Iloilo City
+            © 2026 University of San Agustin - GradReady. All rights reserved.
           </p>
         </div>
       </div>

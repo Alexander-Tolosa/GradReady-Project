@@ -58,7 +58,7 @@ export default function RoleSelectPage() {
 
         {/* Footer */}
         <p className="text-zinc-600 text-sm animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
-          © 2026 University of San Agustin · Iloilo City
+          © 2026 University of San Agustin - GradReady. All rights reserved.
         </p>
       </div>
     </div>
