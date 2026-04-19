@@ -39,7 +39,7 @@ export default function DepartmentCard({ department, onRequirementClick }) {
 
   const clearedCount = department.requirements.filter((r) => r.status === 'cleared').length;
   const totalCount = department.requirements.length;
-  const progressPercent = Math.round((clearedCount / totalCount) * 100);
+  const progressPercent = totalCount > 0 ? Math.round((clearedCount / totalCount) * 100) : 0;
 
   const getDeptStatus = () => {
     if (progressPercent === 100) return { text: 'Complete', color: 'text-status-cleared' };
