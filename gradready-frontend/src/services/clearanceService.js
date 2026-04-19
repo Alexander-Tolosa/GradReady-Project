@@ -13,6 +13,7 @@ const DEFAULT_REQUIREMENTS = [
   { department_id: 'student-affairs', description: 'Community service completion', due_date: '2025-03-05' },
   { department_id: 'it-office', description: 'Thesis/Capstone approval', due_date: '2025-03-10' },
   { department_id: 'it-office', description: 'Return borrowed IT equipment', due_date: '2025-03-12' },
+  { department_id: 'it-office', description: 'Grade Consultation', due_date: '2025-03-15' },
 ];
 
 export const clearanceService = {
