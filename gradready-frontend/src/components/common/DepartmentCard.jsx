@@ -58,7 +58,6 @@ export default function DepartmentCard({ department, onRequirementClick }) {
       >
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-xl">{department.icon}</span>
             <div>
               <h3 className="text-sm font-semibold text-white leading-tight">
                 {department.name}

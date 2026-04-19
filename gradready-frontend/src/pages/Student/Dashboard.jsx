@@ -143,12 +143,6 @@ export default function Dashboard({ session }) {
             </div>
 
             <div className="mt-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-white">Clearance Matrix</h2>
-                <span className="text-xs text-zinc-500">
-                  {stats.clearedReqs}/{stats.totalReqs} requirements cleared
-                </span>
-              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {departments.map((dept, index) => (
                   <div key={dept.id} className="animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
