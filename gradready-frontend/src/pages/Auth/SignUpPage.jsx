@@ -5,15 +5,6 @@ import { authService } from '../../services/authService';
 
 const PROGRAMS = [
   'BS Information Technology',
-  'BS Computer Science',
-  'BS Information Systems',
-  'BS Accountancy',
-  'BS Business Administration',
-  'BS Nursing',
-  'BS Psychology',
-  'BS Education',
-  'BS Architecture',
-  'BS Civil Engineering',
 ];
 
 export default function SignUpPage() {
@@ -308,7 +299,7 @@ export default function SignUpPage() {
                       onChange={(e) => setYearLevel(e.target.value)}
                       className="w-full bg-[#18181b] border border-[#27272a] rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:border-maroon focus:ring-1 focus:ring-maroon/50 outline-none transition-all appearance-none cursor-pointer"
                     >
-                      {['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year'].map((y) => (
+                      {['1st Year', '2nd Year', '3rd Year', '4th Year'].map((y) => (
                         <option key={y} value={y}>{y}</option>
                       ))}
                     </select>
