@@ -1,28 +1,21 @@
 import React from 'react';
-import { CheckCircle2, Clock, Upload, XCircle, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, Upload, XCircle, AlertTriangle } from 'lucide-react';
 
 export default function ProgressOverview({ stats }) {
   const cards = [
     {
-      label: 'Cleared',
-      count: stats.clearedReqs,
-      icon: CheckCircle2,
-      color: 'text-status-cleared',
-      bg: 'bg-status-cleared/10',
+      label: 'Missing',
+      count: (stats.pendingReqs || 0) + (stats.missingReqs || 0),
+      icon: XCircle,
+      color: 'text-status-missing',
+      bg: 'bg-status-missing/10',
     },
     {
-      label: 'Submitted',
+      label: 'Submitted/Pending',
       count: stats.submittedReqs,
       icon: Upload,
       color: 'text-status-submitted',
       bg: 'bg-status-submitted/10',
-    },
-    {
-      label: 'Pending',
-      count: stats.pendingReqs,
-      icon: Clock,
-      color: 'text-status-pending',
-      bg: 'bg-status-pending/10',
     },
     {
       label: 'Revision Needed',
@@ -32,16 +25,16 @@ export default function ProgressOverview({ stats }) {
       bg: 'bg-status-revision/10',
     },
     {
-      label: 'Missing',
-      count: stats.missingReqs,
-      icon: XCircle,
-      color: 'text-status-missing',
-      bg: 'bg-status-missing/10',
+      label: 'Cleared',
+      count: stats.clearedReqs,
+      icon: CheckCircle2,
+      color: 'text-status-cleared',
+      bg: 'bg-status-cleared/10',
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
       {cards.map((card) => {
         const Icon = card.icon;
         return (

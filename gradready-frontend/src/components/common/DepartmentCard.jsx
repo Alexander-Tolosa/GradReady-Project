@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, XCircle, AlertCircle, Clock, Upload, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle2, XCircle, AlertCircle, Upload, ChevronDown, ChevronUp } from 'lucide-react';
 
 const statusConfig = {
   cleared: {
@@ -14,6 +14,12 @@ const statusConfig = {
     className: 'status-missing',
     dotColor: 'bg-status-missing',
   },
+  pending: {
+    icon: XCircle,
+    label: 'Missing',
+    className: 'status-missing',
+    dotColor: 'bg-status-missing',
+  },
   needs_revision: {
     icon: AlertCircle,
     label: 'Revision Needed',
@@ -22,15 +28,9 @@ const statusConfig = {
   },
   submitted: {
     icon: Upload,
-    label: 'Submitted',
+    label: 'Submitted/Pending',
     className: 'status-submitted',
     dotColor: 'bg-status-submitted',
-  },
-  pending: {
-    icon: Clock,
-    label: 'Pending',
-    className: 'status-pending',
-    dotColor: 'bg-status-pending',
   },
 };
 
