@@ -166,3 +166,8 @@ INSERT INTO public.offices (id, name, location, room, hours, phone, email, head,
 ('accounting', 'Accounting Office', 'Administration Building, Ground Floor', 'Room 103-104', 'Mon–Fri: 8:00 AM – 4:30 PM', '(033) 337-4841 loc. 103', 'accounting@usa.edu.ph', 'Mr. Roberto A. Domingo', 'open'),
 ('student-affairs', 'Student Affairs Office', 'Student Center, 2nd Floor', 'Room 210', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 210', 'studentaffairs@usa.edu.ph', 'Ms. Patricia G. Reyes', 'open')
 ON CONFLICT (id) DO NOTHING;
+
+-- 8. Cleanup: Remove dormitory entries
+DELETE FROM public.requirements WHERE department_id = 'dormitory';
+DELETE FROM public.offices WHERE id = 'dormitory';
+DELETE FROM public.departments WHERE id = 'dormitory';
