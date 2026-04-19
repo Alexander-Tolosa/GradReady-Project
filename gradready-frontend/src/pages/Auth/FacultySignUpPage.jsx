@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, Mail, Lock, Eye, EyeOff, User, Hash, ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { authService, supabase } from '../../services/authService';
 
@@ -13,6 +13,7 @@ const POSITIONS = [
 ];
 
 export default function FacultySignUpPage() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1); // 1 = account, 2 = profile
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -69,6 +70,7 @@ export default function FacultySignUpPage() {
         department_id: departmentId,
         position,
       });
+      navigate('/faculty/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {

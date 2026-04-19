@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Shield, Mail, Lock, Eye, EyeOff, User, Hash, Briefcase, ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { authService } from '../../services/authService';
 
@@ -13,6 +13,7 @@ const DEPARTMENTS = [
 ];
 
 export default function AdminSignUpPage() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1); // 1 = account, 2 = profile
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,6 +53,7 @@ export default function AdminSignUpPage() {
         employee_id: employeeId,
         department,
       });
+      navigate('/admin/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
