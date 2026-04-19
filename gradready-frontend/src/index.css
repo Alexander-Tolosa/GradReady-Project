@@ -47,7 +47,7 @@
   .card {
     background: #18181b;
     border: 1px solid #27272a;
-    border-radius: 12px;
+    border-radius: 4px;
     transition: border-color 0.2s ease;
   }
 
@@ -60,7 +60,7 @@
     align-items: center;
     gap: 5px;
     padding: 3px 10px;
-    border-radius: 6px;
+    border-radius: 2px;
     font-size: 0.7rem;
     font-weight: 500;
     letter-spacing: 0.02em;
@@ -97,7 +97,7 @@
     background: #7f1d1d;
     color: white;
     padding: 8px 20px;
-    border-radius: 8px;
+    border-radius: 4px;
     font-weight: 500;
     font-size: 0.875rem;
     transition: all 0.15s ease;
@@ -126,7 +126,7 @@
 
   .upload-zone {
     border: 1.5px dashed #3f3f46;
-    border-radius: 12px;
+    border-radius: 4px;
     padding: 2rem;
     text-align: center;
     transition: all 0.2s ease;
@@ -155,7 +155,7 @@
   .modal-content {
     background: #18181b;
     border: 1px solid #27272a;
-    border-radius: 16px;
+    border-radius: 4px;
     max-width: 480px;
     width: 100%;
     max-height: 90vh;
@@ -168,7 +168,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 14px;
-    border-radius: 8px;
+    border-radius: 2px;
     transition: background 0.15s ease;
     cursor: default;
     gap: 12px;
@@ -189,7 +189,7 @@
   .search-input {
     background: #1c1c1f;
     border: 1px solid #27272a;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 10px 14px 10px 40px;
     width: 100%;
     color: #d4d4d8;
