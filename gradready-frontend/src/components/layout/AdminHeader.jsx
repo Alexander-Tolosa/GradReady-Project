@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Shield, Hash, Building2 } from 'lucide-react';
+import { Shield, Hash } from 'lucide-react';
 
 export default function AdminHeader({ admin, stats }) {
   return (
@@ -35,10 +35,6 @@ export default function AdminHeader({ admin, stats }) {
             <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
               <Hash className="w-3.5 h-3.5" />
               <span>{admin?.employee_id || 'ID Unknown'}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
-              <Building2 className="w-3.5 h-3.5" />
-              <span>{admin?.department || 'Department Unknown'}</span>
             </div>
           </div>
         </div>
