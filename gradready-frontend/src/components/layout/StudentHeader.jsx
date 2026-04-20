@@ -9,7 +9,7 @@ export default function StudentHeader({ student, stats }) {
         <div className="relative">
           <div className="w-16 h-16 rounded-xl bg-maroon flex items-center justify-center">
             <span className="text-xl font-semibold text-white">
-              {student.name.split(' ').map(n => n[0]).join('')}
+              {(student.name || 'Student').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
             </span>
           </div>
           <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-status-cleared flex items-center justify-center border-2 border-[#111114]">
