@@ -34,20 +34,11 @@ class ErrorBoundary extends React.Component {
 }
 
 function MainApp() {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(undefined); // undefined = still initializing
   const [userRole, setUserRole] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [roleLoading, setRoleLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Safety net: force stop loading after 10 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-      setRoleLoading(false);
-    }, 10000);
-    return () => clearTimeout(timer);
-  }, []);
+
 
   useEffect(() => {
     let cancelled = false;
@@ -67,21 +58,21 @@ function MainApp() {
         if (!cancelled) {
           console.error('Failed to get session', err);
           setError('Failed to load session. Please refresh the page.');
+          setSession(null);
         }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-          setRoleLoading(false);
-        }
-      }
+
     }
 
     initializeSession();
 
     const { data: { subscription } } = authService.onAuthStateChange(async (_event, s) => {
       if (cancelled) return;
-      setSession(s);
-      setRoleLoading(true);
+
+      // Only update session, don't re-fetch role if session user hasn't changed
+      setSession(prev => {
+        if (prev?.user?.id === s?.user?.id) return prev;
+        return s;
+      });
 
       if (s?.user?.id) {
         try {
@@ -93,8 +84,6 @@ function MainApp() {
       } else {
         setUserRole(null);
       }
-
-      if (!cancelled) setRoleLoading(false);
     });
 
     return () => {
@@ -114,12 +103,10 @@ function MainApp() {
     );
   }
 
-  if (loading || roleLoading) {
+  // Still initializing — show minimal splash only on first load
+  if (session === undefined) {
     return (
-      <div className="min-h-screen bg-[#111114] flex flex-col items-center justify-center" style={{color:'white'}}>
-        <div className="w-10 h-10 border-2 border-maroon border-t-transparent rounded-full animate-spin mb-4" />
-        <p>Loading GradReady...</p>
-      </div>
+      <div className="min-h-screen bg-[#111114]" />
     );
   }
 
