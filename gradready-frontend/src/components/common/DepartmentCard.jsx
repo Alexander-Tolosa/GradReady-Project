@@ -49,7 +49,7 @@ export default function DepartmentCard({ department, onRequirementClick }) {
   const deptStatus = getDeptStatus();
 
   return (
-    <div className="card h-full flex flex-col overflow-hidden" id={`dept-card-${department.id}`}>
+    <div className="card flex flex-col overflow-hidden" id={`dept-card-${department.id}`}>
       {/* Card Header */}
       <div
         className={`p-4 select-none cursor-pointer hover:bg-[#1f1f22] transition-colors ${expanded ? 'border-b border-[#27272a]' : ''}`}
@@ -94,7 +94,7 @@ export default function DepartmentCard({ department, onRequirementClick }) {
 
       {/* Requirements List */}
       {expanded && (
-        <div className="flex-1 flex flex-col bg-[#141417]">
+        <div className="flex flex-col bg-[#141417]">
           {department.requirements.map((req, index) => {
             const config = statusConfig[req.status] || statusConfig['missing'];
             const isClickable = ['missing', 'needs_revision', 'pending'].includes(req.status);
@@ -102,10 +102,11 @@ export default function DepartmentCard({ department, onRequirementClick }) {
             return (
               <div
                 key={req.id || index}
-                className={`requirement-row ${isClickable ? 'clickable' : ''} ${index !== department.requirements.length - 1
+                className={`requirement-row ${isClickable ? 'clickable' : ''} ${
+                  index !== department.requirements.length - 1
                     ? 'border-b border-[#1e1e21]'
                     : ''
-                  }`}
+                }`}
                 onClick={() => isClickable && onRequirementClick(req)}
                 id={`req-${req.id || index}`}
               >
