@@ -17,15 +17,42 @@ export const facultyService = {
   },
 
   async fetchDepartmentSubmissions(departmentId) {
-    // Note: Due to RLS, faculty can only select requirements for their own department_id
+    // Step 1: Fetch requirements for the department
     const { data: requirements, error: reqError } = await supabase
       .from('requirements')
-      .select('*, students(name, student_id, program)')
+      .select('*')
       .eq('department_id', departmentId)
       .order('updated_at', { ascending: false });
 
     if (reqError) throw reqError;
-    return requirements;
+    if (!requirements || requirements.length === 0) return [];
+
+    // Step 2: Get unique student_auth_ids from requirements
+    const studentAuthIds = [...new Set(requirements.map(r => r.student_auth_id).filter(Boolean))];
+
+    // Step 3: Fetch student profiles from the students table using auth ids
+    const { data: students, error: studentsError } = await supabase
+      .from('students')
+      .select('id, name, student_id, program')
+      .in('id', studentAuthIds);
+
+    if (studentsError) {
+      console.error('Failed to fetch students:', studentsError);
+    }
+
+    // Step 4: Build a lookup map for quick access
+    const studentMap = {};
+    (students || []).forEach(s => {
+      studentMap[s.id] = s;
+    });
+
+    // Step 5: Attach student data to each requirement
+    const enriched = requirements.map(req => ({
+      ...req,
+      students: studentMap[req.student_auth_id] || null,
+    }));
+
+    return enriched;
   },
 
   async updateRequirementStatus(requirementId, status, revisionNote = null, studentId) {
@@ -55,9 +82,8 @@ export const facultyService = {
     }
 
     if (message && studentId) {
-       await notificationService.createNotification(studentId, 'status_update', message, requirementId).catch(console.error);
-       // Mock Email Dispatch simulated here
-       console.log(`[MOCK EMAIL DISPATCH] Sent to student ${studentId}: User dashboard alert initialized. Content: "${message}"`);
+      await notificationService.createNotification(studentId, 'status_update', message, requirementId).catch(console.error);
+      console.log(`[MOCK EMAIL DISPATCH] Sent to student ${studentId}: User dashboard alert initialized. Content: "${message}"`);
     }
   }
 };
