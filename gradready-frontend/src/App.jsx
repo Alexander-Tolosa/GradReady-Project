@@ -37,6 +37,7 @@ function MainApp() {
   const [session, setSession] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(false); // ← NEW
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -49,9 +50,11 @@ function MainApp() {
         setSession(s);
 
         if (s?.user?.id) {
+          setRoleLoading(true); // ← NEW
           const role = await authService.getUserRole(s.user.id);
           if (cancelled) return;
           setUserRole(role);
+          setRoleLoading(false); // ← NEW
         }
       } catch (err) {
         if (!cancelled) {
@@ -71,13 +74,19 @@ function MainApp() {
 
       if (s?.user?.id) {
         try {
+          setRoleLoading(true); // ← NEW
           const role = await authService.getUserRole(s.user.id);
-          if (!cancelled) setUserRole(role);
+          if (!cancelled) {
+            setUserRole(role);
+            setRoleLoading(false); // ← NEW
+          }
         } catch (err) {
           console.error('Failed to fetch role on auth change:', err);
+          setRoleLoading(false); // ← NEW
         }
       } else {
         setUserRole(null);
+        setRoleLoading(false); // ← NEW
       }
     });
 
@@ -87,7 +96,7 @@ function MainApp() {
     };
   }, []);
 
-  console.log('[App Render] loading=', loading, 'error=', error, 'session=', !!session, 'role=', userRole);
+
 
   if (error) {
     return (
@@ -98,7 +107,8 @@ function MainApp() {
     );
   }
 
-  if (loading) {
+  // ← Show spinner while loading session OR role
+  if (loading || roleLoading) {
     return (
       <div className="min-h-screen bg-[#111114] flex flex-col items-center justify-center" style={{color:'white'}}>
         <div className="w-10 h-10 border-2 border-maroon border-t-transparent rounded-full animate-spin mb-4" />
