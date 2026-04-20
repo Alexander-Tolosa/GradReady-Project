@@ -24,9 +24,6 @@ function StatCard({ label, value, icon: Icon }) {
 
 // ─── Overview Tab ─────────────────────────────────────────────────────────────
 function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport }) {
-  const [expanded, setExpanded] = useState(false);
-  const displayRequests = expanded ? recentRequests : recentRequests.slice(0, 10);
-
   return (
     <div className="space-y-8 animate-fade-in max-w-7xl">
       
@@ -70,19 +67,13 @@ function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport
       <div className="bg-[#18181b] rounded-xl border border-[#27272a] mt-8 overflow-hidden">
         <div className="px-6 py-5 border-b border-[#27272a] flex items-center justify-between bg-[#111114]/50">
           <h3 className="text-xs uppercase tracking-[0.15em] text-zinc-400 font-bold">Ledger Activity</h3>
-          <button 
-            onClick={() => setExpanded(!expanded)}
-            className="text-xs font-semibold text-white hover:text-maroon-light transition-colors"
-          >
-            {expanded ? 'Collapse' : 'View All'}
-          </button>
         </div>
         
         <div className="divide-y divide-[#27272a] p-3">
           {recentRequests.length === 0 ? (
              <div className="p-8 text-center text-zinc-500 text-sm">No recent ledger activity.</div>
           ) : (
-            displayRequests.map((req) => {
+            recentRequests.map((req) => {
               // Determine Icon and Styling based on status
               const isCleared = req.status === 'cleared';
               const isFlagged = req.status === 'needs_revision';
