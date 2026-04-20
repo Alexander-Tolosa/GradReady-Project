@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, Mail, Lock, Eye, EyeOff, User, Hash, ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { authService } from '../../services/authService';
 
 export default function AdminSignUpPage() {
@@ -14,7 +14,6 @@ export default function AdminSignUpPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
-  const [employeeId, setEmployeeId] = useState('');
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -37,7 +36,7 @@ export default function AdminSignUpPage() {
     try {
       await authService.signUpAdmin(email, password, {
         name,
-        employee_id: employeeId,
+        employee_id: null,
         department: 'IT / System Administration',
       });
       navigate('/admin/dashboard');
@@ -238,21 +237,6 @@ export default function AdminSignUpPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="signup-emp-id" className="block text-xs font-medium text-zinc-400 mb-2">Employee ID</label>
-                  <div className="relative">
-                    <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
-                    <input
-                      id="signup-emp-id"
-                      type="text"
-                      required
-                      value={employeeId}
-                      onChange={(e) => setEmployeeId(e.target.value)}
-                      placeholder="EMP-00123"
-                      className="w-full bg-[#18181b] border border-[#27272a] rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:border-maroon focus:ring-1 focus:ring-maroon/50 outline-none transition-all"
-                    />
-                  </div>
-                </div>
 
                 {error && (
                   <div className="bg-status-missing/10 border border-status-missing/20 rounded-xl px-4 py-3 text-sm text-status-missing animate-fade-in">
