@@ -77,13 +77,18 @@ export const authService = {
 
   // ← FIXED: now has a 5 second timeout so it never hangs forever
   async getSession() {
-    const { data, error } = await withTimeout(
-      supabase.auth.getSession(),
-      5000,
-      'Supabase connection timed out. Check your API keys and network.'
-    );
-    if (error) throw error;
-    return data.session;
+    try {
+      const { data, error } = await withTimeout(
+        supabase.auth.getSession(),
+        15000,
+        'Supabase connection timed out. Check your API keys and network.'
+      );
+      if (error) throw error;
+      return data.session;
+    } catch (err) {
+      console.warn('getSession failed, returning null:', err.message);
+      return null;
+    }
   },
 
   onAuthStateChange(callback) {
