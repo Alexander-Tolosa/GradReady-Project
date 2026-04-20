@@ -1,33 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, Mail, Lock, Eye, EyeOff, User, Hash, Briefcase, ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
+import { Shield, Mail, Lock, Eye, EyeOff, User, Hash, ArrowRight, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { authService } from '../../services/authService';
-
-const DEPARTMENTS = [
-  'University Library',
-  "Registrar's Office",
-  "Dean's Office (CITE)",
-  'Accounting Office',
-  'Student Affairs Office',
-  'IT / System Administration'
-];
 
 export default function AdminSignUpPage() {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1); // 1 = account, 2 = profile
+  const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Account fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  // Profile fields
   const [name, setName] = useState('');
   const [employeeId, setEmployeeId] = useState('');
-  const [department, setDepartment] = useState(DEPARTMENTS[0]);
 
   const handleStep1 = (e) => {
     e.preventDefault();
@@ -51,7 +38,7 @@ export default function AdminSignUpPage() {
       await authService.signUpAdmin(email, password, {
         name,
         employee_id: employeeId,
-        department,
+        department: 'IT / System Administration',
       });
       navigate('/admin/dashboard');
     } catch (err) {
@@ -82,7 +69,6 @@ export default function AdminSignUpPage() {
               <img src="/images/usa-seal.png" alt="USA Seal" className="w-10 h-10 rounded-xl object-contain" />
               <span className="text-white font-semibold text-lg">GradReady Admin</span>
             </div>
-
             <Link to="/" className="text-zinc-400 hover:text-white flex items-center gap-2 text-sm transition-colors">
               <ArrowLeft className="w-4 h-4" />
               Change Role
@@ -99,7 +85,6 @@ export default function AdminSignUpPage() {
               Create an administrator account to help manage the university graduation clearance process.
             </p>
 
-            {/* Steps indicator */}
             <div className="flex items-center gap-4 mt-10">
               <div className="flex items-center gap-2">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium transition-colors ${step >= 1 ? 'bg-maroon text-white' : 'bg-[#27272a] text-zinc-500'}`}>1</div>
@@ -133,7 +118,6 @@ export default function AdminSignUpPage() {
             </Link>
           </div>
 
-          {/* Step indicator (mobile) */}
           <div className="flex items-center gap-2 mb-6 lg:hidden">
             <div className={`h-1 rounded-full flex-1 transition-colors ${step >= 1 ? 'bg-maroon' : 'bg-[#27272a]'}`} />
             <div className={`h-1 rounded-full flex-1 transition-colors ${step >= 2 ? 'bg-maroon' : 'bg-[#27272a]'}`} />
@@ -181,7 +165,6 @@ export default function AdminSignUpPage() {
                       {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                     </button>
                   </div>
-                  {/* Password strength bar */}
                   {password.length > 0 && (
                     <div className="mt-2 flex items-center gap-2">
                       <div className="flex-1 flex gap-1">
@@ -271,23 +254,6 @@ export default function AdminSignUpPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="signup-department" className="block text-xs font-medium text-zinc-400 mb-2">Department</label>
-                  <div className="relative">
-                    <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
-                    <select
-                      id="signup-department"
-                      value={department}
-                      onChange={(e) => setDepartment(e.target.value)}
-                      className="w-full bg-[#18181b] border border-[#27272a] rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:border-maroon focus:ring-1 focus:ring-maroon/50 outline-none transition-all appearance-none cursor-pointer"
-                    >
-                      {DEPARTMENTS.map((d) => (
-                        <option key={d} value={d}>{d}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
                 {error && (
                   <div className="bg-status-missing/10 border border-status-missing/20 rounded-xl px-4 py-3 text-sm text-status-missing animate-fade-in">
                     {error}
@@ -325,7 +291,6 @@ export default function AdminSignUpPage() {
             </div>
           )}
 
-          {/* Divider */}
           <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#27272a]" />
