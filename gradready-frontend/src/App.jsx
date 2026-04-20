@@ -28,7 +28,7 @@ export default function App() {
 
         setSession(s);
 
-        if (s?.user) {
+        if (s?.user?.id) {
           const role = await authService.getUserRole(s.user.id);
           if (cancelled) return;
           setUserRole(role);
@@ -49,7 +49,7 @@ export default function App() {
       if (cancelled) return;  // ← NEW: guard here too
       setSession(s);
 
-      if (s?.user) {
+      if (s?.user?.id) {
         try {
           const role = await authService.getUserRole(s.user.id);
           if (!cancelled) setUserRole(role);
