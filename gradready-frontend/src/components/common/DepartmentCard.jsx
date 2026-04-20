@@ -1,5 +1,5 @@
-import React from 'react';
-import { CheckCircle2, XCircle, AlertCircle, Upload } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle2, XCircle, AlertCircle, Upload, ChevronDown, ChevronUp } from 'lucide-react';
 
 const statusConfig = {
   cleared: {
@@ -35,6 +35,7 @@ const statusConfig = {
 };
 
 export default function DepartmentCard({ department, onRequirementClick }) {
+  const [expanded, setExpanded] = useState(true);
   const clearedCount = department.requirements.filter((r) => r.status === 'cleared').length;
   const totalCount = department.requirements.length;
   const progressPercent = totalCount > 0 ? Math.round((clearedCount / totalCount) * 100) : 0;
@@ -50,7 +51,10 @@ export default function DepartmentCard({ department, onRequirementClick }) {
   return (
     <div className="card h-full flex flex-col overflow-hidden" id={`dept-card-${department.id}`}>
       {/* Card Header */}
-      <div className="p-4 border-b border-[#27272a] select-none">
+      <div 
+        className="p-4 border-b border-[#27272a] select-none cursor-pointer hover:bg-[#1f1f22] transition-colors"
+        onClick={() => setExpanded(!expanded)}
+      >
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div>
@@ -67,6 +71,7 @@ export default function DepartmentCard({ department, onRequirementClick }) {
             <span className={`text-xs font-medium ${deptStatus.color}`}>
               {deptStatus.text}
             </span>
+            {expanded ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
           </div>
         </div>
 
@@ -88,44 +93,46 @@ export default function DepartmentCard({ department, onRequirementClick }) {
       </div>
 
       {/* Requirements List */}
-      <div className="flex-1 flex flex-col bg-[#141417]">
-        {department.requirements.map((req, index) => {
-          const config = statusConfig[req.status] || statusConfig['missing']; // Fallback!
-          const isClickable = ['missing', 'needs_revision', 'pending'].includes(req.status);
+      {expanded && (
+        <div className="flex-1 flex flex-col bg-[#141417]">
+          {department.requirements.map((req, index) => {
+            const config = statusConfig[req.status] || statusConfig['missing']; // Fallback!
+            const isClickable = ['missing', 'needs_revision', 'pending'].includes(req.status);
 
-          return (
-            <div
-              key={req.id || index}
-              className={`requirement-row ${isClickable ? 'clickable' : ''} ${
-                index !== department.requirements.length - 1
-                  ? 'border-b border-[#1e1e21]'
-                  : ''
-              }`}
-              onClick={() => isClickable && onRequirementClick(req)}
-              id={`req-${req.id || index}`}
-            >
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${config?.dotColor || ''}`} />
-                <div className="min-w-0 flex-1">
-                  <p className="text-[13px] text-zinc-300 truncate">
-                    {req.description}
-                  </p>
-                  {req.revisionNote && (
-                    <p className="text-xs text-status-revision/70 mt-0.5 truncate">
-                      ⚠ {req.revisionNote}
+            return (
+              <div
+                key={req.id || index}
+                className={`requirement-row ${isClickable ? 'clickable' : ''} ${
+                  index !== department.requirements.length - 1
+                    ? 'border-b border-[#1e1e21]'
+                    : ''
+                }`}
+                onClick={() => isClickable && onRequirementClick(req)}
+                id={`req-${req.id || index}`}
+              >
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${config?.dotColor || ''}`} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[13px] text-zinc-300 truncate">
+                      {req.description}
                     </p>
-                  )}
+                    {req.revisionNote && (
+                      <p className="text-xs text-status-revision/70 mt-0.5 truncate">
+                        ⚠ {req.revisionNote}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className={`status-badge ${config?.className || ''}`}>
+                    {config?.label || 'Unknown'}
+                  </span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <span className={`status-badge ${config?.className || ''}`}>
-                  {config?.label || 'Unknown'}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
