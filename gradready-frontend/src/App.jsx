@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/Auth/LoginPage';
 import SignUpPage from './pages/Auth/SignUpPage';
@@ -34,9 +34,10 @@ class ErrorBoundary extends React.Component {
 }
 
 function MainApp() {
-  const [session, setSession] = useState(undefined); // undefined = still initializing
+  const [session, setSession] = useState(undefined);
   const [userRole, setUserRole] = useState(null);
   const [error, setError] = useState(null);
+  const currentUserId = useRef(null);
 
 
 
@@ -48,6 +49,7 @@ function MainApp() {
         const s = await authService.getSession();
         if (cancelled) return;
         setSession(s);
+        currentUserId.current = s?.user?.id || null;
 
         if (s?.user?.id) {
           const role = await authService.getUserRole(s.user.id);
@@ -60,7 +62,7 @@ function MainApp() {
           setError('Failed to load session. Please refresh the page.');
           setSession(null);
         }
-
+      }
     }
 
     initializeSession();
@@ -68,11 +70,13 @@ function MainApp() {
     const { data: { subscription } } = authService.onAuthStateChange(async (_event, s) => {
       if (cancelled) return;
 
-      // Only update session, don't re-fetch role if session user hasn't changed
-      setSession(prev => {
-        if (prev?.user?.id === s?.user?.id) return prev;
-        return s;
-      });
+      const newUserId = s?.user?.id || null;
+
+      // Skip re-fetching role if same user — prevents flash when switching tabs
+      if (newUserId === currentUserId.current) return;
+
+      currentUserId.current = newUserId;
+      setSession(s);
 
       if (s?.user?.id) {
         try {
@@ -96,18 +100,15 @@ function MainApp() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#111114] flex flex-col items-center justify-center p-6" style={{color:'red'}}>
+      <div className="min-h-screen bg-[#111114] flex flex-col items-center justify-center p-6" style={{ color: 'red' }}>
         <p className="text-red-400 font-mono mb-4">{error}</p>
         <button onClick={() => window.location.reload()} className="px-4 py-2 bg-white text-black rounded">Refresh</button>
       </div>
     );
   }
 
-  // Still initializing — show minimal splash only on first load
   if (session === undefined) {
-    return (
-      <div className="min-h-screen bg-[#111114]" />
-    );
+    return <div className="min-h-screen bg-[#111114]" />;
   }
 
   const getDashboardPath = () => {
@@ -121,11 +122,11 @@ function MainApp() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={!session ? <RoleSelectPage /> : <Navigate to={getDashboardPath()} replace />} />
-        <Route path="/login"  element={!session ? <LoginPage />  : <Navigate to={getDashboardPath()} replace />} />
+        <Route path="/login" element={!session ? <LoginPage /> : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/signup" element={!session ? <SignUpPage /> : <Navigate to={getDashboardPath()} replace />} />
-        <Route path="/admin/login"  element={!session ? <AdminLoginPage />  : <Navigate to={getDashboardPath()} replace />} />
+        <Route path="/admin/login" element={!session ? <AdminLoginPage /> : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/admin/signup" element={!session ? <AdminSignUpPage /> : <Navigate to={getDashboardPath()} replace />} />
-        <Route path="/faculty/login"  element={!session ? <FacultyLoginPage />  : <Navigate to={getDashboardPath()} replace />} />
+        <Route path="/faculty/login" element={!session ? <FacultyLoginPage /> : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/faculty/signup" element={!session ? <FacultySignUpPage /> : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/dashboard" element={session && userRole === 'student' ? <Dashboard session={session} /> : <Navigate to="/login" replace />} />
         <Route path="/admin/dashboard" element={session && userRole === 'admin' ? <AdminDashboard session={session} /> : <Navigate to="/admin/login" replace />} />
