@@ -8,7 +8,7 @@ import AdminSignUpPage from './pages/Auth/AdminSignUpPage';
 import FacultyLoginPage from './pages/Auth/FacultyLoginPage';
 import FacultySignUpPage from './pages/Auth/FacultySignUpPage';
 import Dashboard from './pages/Student/Dashboard';
-import AdminDashboard from './pages/Admin/Dashboard';
+import AdminDashboard from './pages/Admin/AdminDashboard';
 import FacultyDashboard from './pages/Faculty/Dashboard';
 import { authService } from './services/authService';
 

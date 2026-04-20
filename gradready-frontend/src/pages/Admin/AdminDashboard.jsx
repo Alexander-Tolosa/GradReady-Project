@@ -212,19 +212,18 @@ export default function Dashboard({ session }) {
               {/* Desktop Tabs */}
               <div className="hidden sm:flex bg-[#27272a] rounded-lg p-1 mr-2">
                 {[
-                  { key: 'overview',      label: 'Overview',      icon: <Layers className="w-4 h-4" /> },
-                  { key: 'roster',        label: 'Roster',        icon: <Users className="w-4 h-4" /> },
-                  { key: 'roles',         label: 'Roles',         icon: null },
+                  { key: 'overview', label: 'Overview', icon: <Layers className="w-4 h-4" /> },
+                  { key: 'roster', label: 'Roster', icon: <Users className="w-4 h-4" /> },
+                  { key: 'roles', label: 'Roles', icon: null },
                   { key: 'notifications', label: 'Notifications', icon: null, badge: unreadCount },
                 ].map(({ key, label, icon, badge }) => (
                   <button
                     key={key}
                     onClick={() => setActiveTab(key)}
-                    className={`relative flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                      activeTab === key
+                    className={`relative flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${activeTab === key
                         ? 'bg-[#3f3f46] text-white shadow-sm'
                         : 'text-zinc-400 hover:text-zinc-200'
-                    }`}
+                      }`}
                   >
                     {icon}{label}
                     {badge > 0 && (
@@ -251,17 +250,15 @@ export default function Dashboard({ session }) {
       <div className="sm:hidden bg-[#18181b] border-b border-[#27272a] px-4 py-2 flex gap-2">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeTab === 'overview' ? 'bg-[#27272a] text-white' : 'text-zinc-400'
-          }`}
+          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'overview' ? 'bg-[#27272a] text-white' : 'text-zinc-400'
+            }`}
         >
           <Layers className="w-4 h-4" /> Overview
         </button>
         <button
           onClick={() => setActiveTab('roster')}
-          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeTab === 'roster' ? 'bg-[#27272a] text-white' : 'text-zinc-400'
-          }`}
+          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'roster' ? 'bg-[#27272a] text-white' : 'text-zinc-400'
+            }`}
         >
           <Users className="w-4 h-4" /> Roster
         </button>
@@ -303,11 +300,10 @@ export default function Dashboard({ session }) {
       {/* Toast Notification */}
       {notification && (
         <div className="fixed bottom-6 right-6 z-50 animate-slide-up">
-          <div className={`px-4 py-3 rounded-lg shadow-lg text-sm font-medium flex items-center gap-2 border bg-[#18181b] ${
-            notification.isError
+          <div className={`px-4 py-3 rounded-lg shadow-lg text-sm font-medium flex items-center gap-2 border bg-[#18181b] ${notification.isError
               ? 'border-status-missing/50 text-status-missing'
               : 'border-[#27272a] text-status-cleared'
-          }`}>
+            }`}>
             {notification.text}
           </div>
         </div>
