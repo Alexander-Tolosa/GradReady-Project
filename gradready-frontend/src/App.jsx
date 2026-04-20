@@ -37,14 +37,12 @@ function MainApp() {
   const [session, setSession] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [roleLoading, setRoleLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // ← Safety net: force stop loading after 10 seconds no matter what
+  // Safety net: force stop loading after 10 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-      setRoleLoading(false);
     }, 10000);
     return () => clearTimeout(timer);
   }, []);
@@ -59,11 +57,9 @@ function MainApp() {
         setSession(s);
 
         if (s?.user?.id) {
-          setRoleLoading(true);
           const role = await authService.getUserRole(s.user.id);
           if (cancelled) return;
           setUserRole(role);
-          setRoleLoading(false);
         }
       } catch (err) {
         if (!cancelled) {
@@ -83,19 +79,13 @@ function MainApp() {
 
       if (s?.user?.id) {
         try {
-          setRoleLoading(true);
           const role = await authService.getUserRole(s.user.id);
-          if (!cancelled) {
-            setUserRole(role);
-            setRoleLoading(false);
-          }
+          if (!cancelled) setUserRole(role);
         } catch (err) {
           console.error('Failed to fetch role on auth change:', err);
-          setRoleLoading(false);
         }
       } else {
         setUserRole(null);
-        setRoleLoading(false);
       }
     });
 
@@ -116,7 +106,8 @@ function MainApp() {
     );
   }
 
-  if (loading || roleLoading) {
+  // ← Only block on initial loading, not role fetching
+  if (loading) {
     return (
       <div className="min-h-screen bg-[#111114] flex flex-col items-center justify-center" style={{color:'white'}}>
         <div className="w-10 h-10 border-2 border-maroon border-t-transparent rounded-full animate-spin mb-4" />
