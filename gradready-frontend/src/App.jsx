@@ -37,12 +37,14 @@ function MainApp() {
   const [session, setSession] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Safety net: force stop loading after 10 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
+      setRoleLoading(false);
     }, 10000);
     return () => clearTimeout(timer);
   }, []);
@@ -67,7 +69,10 @@ function MainApp() {
           setError('Failed to load session. Please refresh the page.');
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+          setRoleLoading(false);
+        }
       }
     }
 
@@ -76,6 +81,7 @@ function MainApp() {
     const { data: { subscription } } = authService.onAuthStateChange(async (_event, s) => {
       if (cancelled) return;
       setSession(s);
+      setRoleLoading(true);
 
       if (s?.user?.id) {
         try {
@@ -87,6 +93,8 @@ function MainApp() {
       } else {
         setUserRole(null);
       }
+
+      if (!cancelled) setRoleLoading(false);
     });
 
     return () => {
@@ -106,8 +114,7 @@ function MainApp() {
     );
   }
 
-  // ← Only block on initial loading, not role fetching
-  if (loading) {
+  if (loading || roleLoading) {
     return (
       <div className="min-h-screen bg-[#111114] flex flex-col items-center justify-center" style={{color:'white'}}>
         <div className="w-10 h-10 border-2 border-maroon border-t-transparent rounded-full animate-spin mb-4" />
