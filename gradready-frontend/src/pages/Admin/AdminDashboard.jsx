@@ -220,13 +220,16 @@ export default function Dashboard({ session }) {
       {/* ─── Sidebar Sidebar ─── */}
       <aside className="w-64 bg-[#18181b] border-r border-[#27272a] shrink-0 flex flex-col z-30 h-full">
         {/* Branding */}
-        <div className="p-6 flex items-center gap-4 border-b border-[#27272a]/50">
+        <button 
+          onClick={() => window.location.reload()}
+          className="p-6 flex items-center gap-4 border-b border-[#27272a]/50 text-left w-full hover:bg-[#27272a]/30 transition-colors"
+        >
            <img src="/images/usa-seal.png" alt="USA Seal" className="w-10 h-10 rounded-xl object-contain bg-zinc-800" />
            <div>
              <h1 className="text-[17px] font-bold text-white tracking-widest leading-none">GRADREADY</h1>
              <p className="text-[11px] text-zinc-500 uppercase font-medium mt-1">Admin Terminal</p>
            </div>
-        </div>
+        </button>
 
         {/* Navigation Items */}
         <nav className="flex-1 py-6 px-3 flex flex-col gap-1.5">
@@ -299,7 +302,10 @@ export default function Dashboard({ session }) {
 
            {/* Top Right Actions */}
            <div className="flex items-center gap-4">
-              <button className="relative p-2.5 text-zinc-400 hover:text-white bg-[#18181b] border border-[#27272a] rounded-xl transition-colors shadow-sm">
+              <button 
+                onClick={() => setActiveTab('notifications')}
+                className="relative p-2.5 text-zinc-400 hover:text-white bg-[#18181b] border border-[#27272a] rounded-xl transition-colors shadow-sm"
+              >
                 <Bell className="w-5 h-5" />
                 {unreadCount > 0 && <div className="absolute top-2 right-2.5 w-2 h-2 bg-maroon rounded-full ring-2 ring-[#111114]" />}
               </button>
