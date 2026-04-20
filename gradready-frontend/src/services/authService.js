@@ -80,7 +80,7 @@ export const authService = {
     try {
       const { data, error } = await withTimeout(
         supabase.auth.getSession(),
-        15000,
+        2500,
         'Supabase connection timed out. Check your API keys and network.'
       );
       if (error) throw error;
