@@ -12,20 +12,40 @@ import AdminDashboard from './pages/Admin/Dashboard';
 import FacultyDashboard from './pages/Faculty/Dashboard';
 import { authService } from './services/authService';
 
-export default function App() {
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', color: 'red', backgroundColor: 'black', height: '100vh' }}>
+          <h2>React Render Crash:</h2>
+          <pre>{this.state.error?.toString()}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function MainApp() {
   const [session, setSession] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);  // ← NEW: surface errors to UI
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    let cancelled = false;  // ← NEW: prevent stale state updates on unmount
+    let cancelled = false;
 
     async function initializeSession() {
       try {
         const s = await authService.getSession();
         if (cancelled) return;
-
         setSession(s);
 
         if (s?.user?.id) {
@@ -36,7 +56,7 @@ export default function App() {
       } catch (err) {
         if (!cancelled) {
           console.error('Failed to get session', err);
-          setError('Failed to load session. Please refresh the page.');  // ← NEW
+          setError('Failed to load session. Please refresh the page.');
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -46,7 +66,7 @@ export default function App() {
     initializeSession();
 
     const { data: { subscription } } = authService.onAuthStateChange(async (_event, s) => {
-      if (cancelled) return;  // ← NEW: guard here too
+      if (cancelled) return;
       setSession(s);
 
       if (s?.user?.id) {
@@ -62,41 +82,31 @@ export default function App() {
     });
 
     return () => {
-      cancelled = true;       // ← NEW: cancel on unmount
+      cancelled = true;
       subscription.unsubscribe();
     };
   }, []);
 
-  // ── Error state ──────────────────────────────────────────────────────────────
+  console.log('[App Render] loading=', loading, 'error=', error, 'session=', !!session, 'role=', userRole);
+
   if (error) {
     return (
-      <div className="min-h-screen bg-[#111114] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4 text-center px-4">
-          <p className="text-red-400 text-sm">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="text-xs text-zinc-500 underline hover:text-zinc-300 transition-colors"
-          >
-            Refresh page
-          </button>
-        </div>
+      <div className="min-h-screen bg-[#111114] flex flex-col items-center justify-center p-6" style={{color:'red'}}>
+        <p className="text-red-400 font-mono mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="px-4 py-2 bg-white text-black rounded">Refresh</button>
       </div>
     );
   }
 
-  // ── Loading state ─────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#111114] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-maroon border-t-transparent rounded-full animate-spin" />
-          <p className="text-zinc-500 text-sm">Loading GradReady...</p>
-        </div>
+      <div className="min-h-screen bg-[#111114] flex flex-col items-center justify-center" style={{color:'white'}}>
+        <div className="w-10 h-10 border-2 border-maroon border-t-transparent rounded-full animate-spin mb-4" />
+        <p>Loading GradReady...</p>
       </div>
     );
   }
 
-  // ── Role-based dashboard redirect helper ──────────────────────────────────────
   const getDashboardPath = () => {
     if (!userRole) return '/';
     if (userRole === 'admin') return '/admin/dashboard';
@@ -107,51 +117,27 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Role select / home */}
         <Route path="/" element={!session ? <RoleSelectPage /> : <Navigate to={getDashboardPath()} replace />} />
-
-        {/* Student Auth */}
         <Route path="/login"  element={!session ? <LoginPage />  : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/signup" element={!session ? <SignUpPage /> : <Navigate to={getDashboardPath()} replace />} />
-
-        {/* Admin Auth */}
         <Route path="/admin/login"  element={!session ? <AdminLoginPage />  : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/admin/signup" element={!session ? <AdminSignUpPage /> : <Navigate to={getDashboardPath()} replace />} />
-
-        {/* Faculty Auth */}
         <Route path="/faculty/login"  element={!session ? <FacultyLoginPage />  : <Navigate to={getDashboardPath()} replace />} />
         <Route path="/faculty/signup" element={!session ? <FacultySignUpPage /> : <Navigate to={getDashboardPath()} replace />} />
-
-        {/* Dashboards — role-protected */}
-        <Route
-          path="/dashboard"
-          element={
-            session && userRole === 'student'
-              ? <Dashboard session={session} />
-              : <Navigate to="/login" replace />
-          }
-        />
-        <Route
-          path="/admin/dashboard"
-          element={
-            session && userRole === 'admin'
-              ? <AdminDashboard session={session} />
-              : <Navigate to="/admin/login" replace />
-          }
-        />
-        <Route
-          path="/faculty/dashboard"
-          element={
-            session && userRole === 'faculty'
-              ? <FacultyDashboard session={session} />
-              : <Navigate to="/faculty/login" replace />
-          }
-        />
-
-        {/* Fallback */}
+        <Route path="/dashboard" element={session && userRole === 'student' ? <Dashboard session={session} /> : <Navigate to="/login" replace />} />
+        <Route path="/admin/dashboard" element={session && userRole === 'admin' ? <AdminDashboard session={session} /> : <Navigate to="/admin/login" replace />} />
+        <Route path="/faculty/dashboard" element={session && userRole === 'faculty' ? <FacultyDashboard session={session} /> : <Navigate to="/faculty/login" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
+  );
+}
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <MainApp />
+    </ErrorBoundary>
   );
 }
 
