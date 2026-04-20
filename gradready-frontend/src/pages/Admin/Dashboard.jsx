@@ -72,11 +72,17 @@ export default function Dashboard({ session }) {
         <div className="w-full px-4 sm:px-6 lg:px-10">
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
-              <img src="/images/usa-seal.png" alt="USA Seal" className="w-9 h-9 rounded-lg object-contain" />
-              <div>
-                <h1 className="text-lg font-semibold text-white leading-none">GradReady System</h1>
-                <p className="text-zinc-500 text-xs mt-0.5">Admin Portal</p>
-              </div>
+              <button
+                onClick={() => { setActiveTab('overview'); loadData(); }}
+                className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                title="Back to Dashboard"
+              >
+                <img src="/images/usa-seal.png" alt="USA Seal" className="w-9 h-9 rounded-lg object-contain" />
+                <div className="text-left">
+                  <h1 className="text-lg font-semibold text-white leading-none">GradReady System</h1>
+                  <p className="text-zinc-500 text-xs mt-0.5">Admin Portal</p>
+                </div>
+              </button>
             </div>
 
             <div className="flex items-center gap-3">
