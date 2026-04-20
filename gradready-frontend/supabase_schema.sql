@@ -102,6 +102,7 @@ DROP POLICY IF EXISTS "Admins can update own profile." ON public.admins;
 DROP POLICY IF EXISTS "Admins can view all requirements." ON public.requirements;
 DROP POLICY IF EXISTS "Admins can update all requirements." ON public.requirements;
 DROP POLICY IF EXISTS "Admins can view all students." ON public.students;
+DROP POLICY IF EXISTS "Admins can view all faculty." ON public.faculty;
 
 DROP POLICY IF EXISTS "Faculty can view own profile." ON public.faculty;
 DROP POLICY IF EXISTS "Faculty can insert own profile." ON public.faculty;
@@ -143,6 +144,9 @@ CREATE POLICY "Admins can update all requirements."
   USING (EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid()));
 CREATE POLICY "Admins can view all students."
   ON public.students FOR SELECT
+  USING (EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid()));
+CREATE POLICY "Admins can view all faculty."
+  ON public.faculty FOR SELECT
   USING (EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid()));
 
 -- Faculty

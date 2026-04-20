@@ -3,17 +3,26 @@ import { Search, Shield, Building2, User } from 'lucide-react';
 
 export default function ManageRoles({ users, onUpdateRole }) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('all'); // 'all', 'student', 'faculty', 'admin'
 
   const filteredUsers = useMemo(() => {
     if (!users) return [];
-    if (!searchQuery.trim()) return users;
     
-    const query = searchQuery.toLowerCase();
-    return users.filter(user => 
-      (user.name && user.name.toLowerCase().includes(query)) ||
-      (user.derivedRole && user.derivedRole.toLowerCase().includes(query))
-    );
-  }, [users, searchQuery]);
+    return users.filter(user => {
+      // Filter by tab
+      if (activeTab !== 'all' && user.derivedRole !== activeTab) return false;
+      
+      // Filter by search query
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = user.name && user.name.toLowerCase().includes(query);
+        const matchesRole = user.derivedRole && user.derivedRole.toLowerCase().includes(query);
+        const matchesDept = user.assignedDepartment && user.assignedDepartment.toLowerCase().includes(query);
+        return matchesName || matchesRole || matchesDept;
+      }
+      return true;
+    });
+  }, [users, searchQuery, activeTab]);
 
   return (
     <div className="card flex flex-col h-full min-h-[500px]">
@@ -34,7 +43,25 @@ export default function ManageRoles({ users, onUpdateRole }) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-x-auto p-4 sm:p-6">
+      <div className="px-4 sm:px-6 pt-4 border-b border-[#27272a]">
+        <div className="flex items-center gap-6 overflow-x-auto custom-scrollbar pb-[-1px]">
+          {['all', 'student', 'faculty', 'admin'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`pb-3 text-sm font-medium whitespace-nowrap capitalize transition-colors border-b-2 ${
+                activeTab === tab
+                  ? 'border-maroon text-white'
+                  : 'border-transparent text-zinc-500 hover:text-zinc-300 hover:border-zinc-700'
+              }`}
+            >
+              {tab === 'all' ? 'All Roles' : `${tab}s`}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 custom-scrollbar">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredUsers.length > 0 ? (
             filteredUsers.map(user => (
@@ -46,9 +73,12 @@ export default function ManageRoles({ users, onUpdateRole }) {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-zinc-200 truncate">{user.name || 'Unnamed User'}</p>
                     <p className="text-xs text-zinc-500 uppercase tracking-widest mt-1 font-medium">{user.derivedRole}</p>
+                    {user.assignedDepartment && (
+                      <p className="text-xs text-zinc-400 mt-1 truncate">{user.assignedDepartment}</p>
+                    )}
                     <p className="text-[10px] text-zinc-600 mt-2">
                        Joined: {new Date(user.created_at).toLocaleDateString()}
-                    </p>
+                    </p>   
                   </div>
                 </div>
               </div>

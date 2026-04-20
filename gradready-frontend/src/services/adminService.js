@@ -83,17 +83,22 @@ export const adminService = {
     const [
       { data: students },
       { data: admins },
-      { data: faculty }
+      { data: faculty },
+      { data: departments }
     ] = await Promise.all([
-      supabase.from('students').select('id, name, created_at').order('name'),
-      supabase.from('admins').select('id, name, role, created_at').order('name'),
-      supabase.from('faculty').select('id, name, role, created_at').order('name')
+      supabase.from('students').select('id, name, program, created_at').order('name'),
+      supabase.from('admins').select('id, name, role, department, created_at').order('name'),
+      supabase.from('faculty').select('id, name, role, department_id, created_at').order('name'),
+      supabase.from('departments').select('id, name')
     ]);
 
     const users = [
-      ...(students || []).map(s => ({ ...s, derivedRole: 'student' })),
-      ...(admins || []).map(a => ({ ...a, derivedRole: a.role || 'admin' })),
-      ...(faculty || []).map(f => ({ ...f, derivedRole: f.role || 'faculty' }))
+      ...(students || []).map(s => ({ ...s, derivedRole: 'student', assignedDepartment: s.program })),
+      ...(admins || []).map(a => ({ ...a, derivedRole: a.role || 'admin', assignedDepartment: a.department })),
+      ...(faculty || []).map(f => {
+        const dept = (departments || []).find(d => d.id === f.department_id);
+        return { ...f, derivedRole: f.role || 'faculty', assignedDepartment: dept ? dept.name : null };
+      })
     ];
     return users.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   },
