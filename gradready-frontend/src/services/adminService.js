@@ -133,5 +133,43 @@ export const adminService = {
       .neq('status', 'cleared');
 
     if (error) throw error;
+  },
+
+  async exportClearanceData() {
+    const { data: requirements, error: reqError } = await supabase
+      .from('requirements')
+      .select(`
+        *,
+        students (
+          name,
+          student_id,
+          program
+        ),
+        departments (
+          name
+        )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (reqError) throw reqError;
+
+    // Build CSV Header
+    const headers = ['Student Name', 'Student ID', 'Program/College', 'Department', 'Requirement', 'Status', 'Last Updated'];
+    
+    // Build CSV Rows
+    const rows = (requirements || []).map(req => {
+      return [
+        req.students?.name || 'Unknown',
+        req.students?.student_id || 'N/A',
+        req.students?.program || 'N/A',
+        req.departments?.name || req.department_id,
+        req.description,
+        req.status,
+        new Date(req.updated_at || req.created_at).toLocaleDateString()
+      ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(','); // Escape quotes inside CSV
+    });
+
+    const csvContent = [headers.join(','), ...rows].join('\n');
+    return csvContent;
   }
 };

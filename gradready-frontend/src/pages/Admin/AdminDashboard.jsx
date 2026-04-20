@@ -23,14 +23,17 @@ function StatCard({ label, value, icon: Icon }) {
 }
 
 // ─── Overview Tab ─────────────────────────────────────────────────────────────
-function OverviewTab({ stats, recentRequests = [], onApprove, onReject }) {
+function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport, onViewAll }) {
   return (
     <div className="space-y-8 animate-fade-in max-w-7xl">
       
       {/* Title & Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2">
         <h2 className="text-2xl font-bold text-white tracking-tight">Institutional Overview</h2>
-        <button className="flex items-center gap-2 px-5 py-2.5 bg-maroon hover:bg-maroon-light text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+        <button 
+          onClick={onExport}
+          className="flex items-center gap-2 px-5 py-2.5 bg-maroon hover:bg-maroon-light text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+        >
           <Download className="w-4 h-4" />
           Export Ledger
         </button>
@@ -64,7 +67,12 @@ function OverviewTab({ stats, recentRequests = [], onApprove, onReject }) {
       <div className="bg-[#18181b] rounded-xl border border-[#27272a] mt-8 overflow-hidden">
         <div className="px-6 py-5 border-b border-[#27272a] flex items-center justify-between bg-[#111114]/50">
           <h3 className="text-xs uppercase tracking-[0.15em] text-zinc-400 font-bold">Ledger Activity</h3>
-          <button className="text-xs font-semibold text-white hover:text-maroon-light transition-colors">View All</button>
+          <button 
+            onClick={onViewAll}
+            className="text-xs font-semibold text-white hover:text-maroon-light transition-colors"
+          >
+            View All
+          </button>
         </div>
         
         <div className="divide-y divide-[#27272a] p-3">
@@ -201,6 +209,24 @@ export default function Dashboard({ session }) {
       setNotifications(await notificationService.fetchNotifications());
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleExportLedger = async () => {
+    try {
+      const csvData = await adminService.exportClearanceData();
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `gradready_ledger_${new Date().toISOString().slice(0,10)}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showNotification('Ledger exported successfully.');
+    } catch (e) {
+       showNotification('Failed to export ledger: ' + e.message, true);
     }
   };
 
@@ -341,6 +367,8 @@ export default function Dashboard({ session }) {
               recentRequests={systemData?.recentRequests}
               onApprove={handleApprove}
               onReject={handleReject}
+              onExport={handleExportLedger}
+              onViewAll={() => setActiveTab('notifications')}
             />
           )}
         </div>
