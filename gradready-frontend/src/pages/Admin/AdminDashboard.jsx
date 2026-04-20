@@ -215,10 +215,10 @@ export default function Dashboard({ session }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#111114] flex flex-col md:flex-row">
+    <div className="h-screen bg-[#111114] flex overflow-hidden">
       
       {/* ─── Sidebar Sidebar ─── */}
-      <aside className="w-full md:w-64 bg-[#18181b] border-r border-[#27272a] shrink-0 flex flex-col z-30 min-h-screen md:sticky top-0 transition-transform">
+      <aside className="w-64 bg-[#18181b] border-r border-[#27272a] shrink-0 flex flex-col z-30 h-full">
         {/* Branding */}
         <div className="p-6 flex items-center gap-4 border-b border-[#27272a]/50">
            <img src="/images/usa-seal.png" alt="USA Seal" className="w-10 h-10 rounded-xl object-contain bg-zinc-800" />
@@ -307,7 +307,7 @@ export default function Dashboard({ session }) {
         </header>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-x-hidden overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
           {loading && !systemData ? (
             <div className="h-full flex flex-col items-center justify-center gap-4">
               <Loader2 className="w-8 h-8 text-maroon animate-spin" />
@@ -338,7 +338,6 @@ export default function Dashboard({ session }) {
             />
           )}
         </div>
-
       </main>
 
       {/* Toast Notification */}
