@@ -51,8 +51,8 @@ export default function DepartmentCard({ department, onRequirementClick }) {
   return (
     <div className="card h-full flex flex-col overflow-hidden" id={`dept-card-${department.id}`}>
       {/* Card Header */}
-      <div 
-        className="p-4 border-b border-[#27272a] select-none cursor-pointer hover:bg-[#1f1f22] transition-colors"
+      <div
+        className={`p-4 select-none cursor-pointer hover:bg-[#1f1f22] transition-colors ${expanded ? 'border-b border-[#27272a]' : ''}`}
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-start justify-between">
@@ -96,17 +96,16 @@ export default function DepartmentCard({ department, onRequirementClick }) {
       {expanded && (
         <div className="flex-1 flex flex-col bg-[#141417]">
           {department.requirements.map((req, index) => {
-            const config = statusConfig[req.status] || statusConfig['missing']; // Fallback!
+            const config = statusConfig[req.status] || statusConfig['missing'];
             const isClickable = ['missing', 'needs_revision', 'pending'].includes(req.status);
 
             return (
               <div
                 key={req.id || index}
-                className={`requirement-row ${isClickable ? 'clickable' : ''} ${
-                  index !== department.requirements.length - 1
+                className={`requirement-row ${isClickable ? 'clickable' : ''} ${index !== department.requirements.length - 1
                     ? 'border-b border-[#1e1e21]'
                     : ''
-                }`}
+                  }`}
                 onClick={() => isClickable && onRequirementClick(req)}
                 id={`req-${req.id || index}`}
               >

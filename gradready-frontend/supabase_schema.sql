@@ -99,24 +99,27 @@ DROP POLICY IF EXISTS "Users can update own profile." ON public.students;
 DROP POLICY IF EXISTS "Admins can view own profile." ON public.admins;
 DROP POLICY IF EXISTS "Admins can insert own profile." ON public.admins;
 DROP POLICY IF EXISTS "Admins can update own profile." ON public.admins;
+DROP POLICY IF EXISTS "Admins can view all requirements." ON public.requirements;
+DROP POLICY IF EXISTS "Admins can update all requirements." ON public.requirements;
+DROP POLICY IF EXISTS "Admins can view all students." ON public.students;
 
 DROP POLICY IF EXISTS "Faculty can view own profile." ON public.faculty;
 DROP POLICY IF EXISTS "Faculty can insert own profile." ON public.faculty;
 DROP POLICY IF EXISTS "Faculty can update own profile." ON public.faculty;
+DROP POLICY IF EXISTS "Faculty can view department requirements." ON public.requirements;
+DROP POLICY IF EXISTS "Faculty can update department requirements." ON public.requirements;
 
 DROP POLICY IF EXISTS "Users can view own requirements." ON public.requirements;
 DROP POLICY IF EXISTS "Users can insert own requirements." ON public.requirements;
 DROP POLICY IF EXISTS "Users can update own requirements." ON public.requirements;
 
-DROP POLICY IF EXISTS "Authenticated users can upload documents" ON storage.objects;
-DROP POLICY IF EXISTS "Documents are publically viewable" ON storage.objects;
-DROP POLICY IF EXISTS "Users can update own documents" ON storage.objects;
-
 DROP POLICY IF EXISTS "Users can view own notifications." ON public.notifications;
 DROP POLICY IF EXISTS "Users can insert own notifications." ON public.notifications;
 DROP POLICY IF EXISTS "Users can update own notifications." ON public.notifications;
-DROP POLICY IF EXISTS "Faculty can view department requirements." ON public.requirements;
-DROP POLICY IF EXISTS "Faculty can update department requirements." ON public.requirements;
+
+DROP POLICY IF EXISTS "Authenticated users can upload documents" ON storage.objects;
+DROP POLICY IF EXISTS "Documents are publically viewable" ON storage.objects;
+DROP POLICY IF EXISTS "Users can update own documents" ON storage.objects;
 
 -- 5. Recreate all policies
 -- Departments & Offices
@@ -132,16 +135,12 @@ CREATE POLICY "Users can update own profile." ON public.students FOR UPDATE USIN
 CREATE POLICY "Admins can view own profile." ON public.admins FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Admins can insert own profile." ON public.admins FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Admins can update own profile." ON public.admins FOR UPDATE USING (auth.uid() = id);
-
--- Admins specific access policies
 CREATE POLICY "Admins can view all requirements."
   ON public.requirements FOR SELECT
   USING (EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid()));
-
 CREATE POLICY "Admins can update all requirements."
   ON public.requirements FOR UPDATE
   USING (EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid()));
-
 CREATE POLICY "Admins can view all students."
   ON public.students FOR SELECT
   USING (EXISTS (SELECT 1 FROM public.admins WHERE id = auth.uid()));
@@ -150,12 +149,9 @@ CREATE POLICY "Admins can view all students."
 CREATE POLICY "Faculty can view own profile." ON public.faculty FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Faculty can insert own profile." ON public.faculty FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Faculty can update own profile." ON public.faculty FOR UPDATE USING (auth.uid() = id);
-
--- Faculty specific access policies for requirements
 CREATE POLICY "Faculty can view department requirements."
   ON public.requirements FOR SELECT
   USING (EXISTS (SELECT 1 FROM public.faculty WHERE id = auth.uid() AND department_id = requirements.department_id));
-
 CREATE POLICY "Faculty can update department requirements."
   ON public.requirements FOR UPDATE
   USING (EXISTS (SELECT 1 FROM public.faculty WHERE id = auth.uid() AND department_id = requirements.department_id));
@@ -207,3 +203,21 @@ DELETE FROM public.departments WHERE id = 'dormitory';
 DELETE FROM public.requirements WHERE department_id = 'academic-supervisor';
 DELETE FROM public.offices WHERE id = 'academic-supervisor';
 DELETE FROM public.departments WHERE id = 'academic-supervisor';
+
+-- 9. Sample Requirements Data
+INSERT INTO public.requirements (student_auth_id, department_id, description, status, due_date) VALUES
+('182b8db7-6083-4b73-b089-4f4ed1141d7d', 'it-office', 'Thesis/Capstone approval', 'pending', '2025-03-10'),
+('182b8db7-6083-4b73-b089-4f4ed1141d7d', 'it-office', 'Return borrowed IT equipment', 'pending', '2025-03-12'),
+('182b8db7-6083-4b73-b089-4f4ed1141d7d', 'it-office', 'Grade Consultation', 'pending', '2025-03-15')
+ON CONFLICT DO NOTHING;
+
+CREATE POLICY "Faculty can view department students."
+  ON public.students FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.faculty f
+      JOIN public.requirements r ON r.department_id = f.department_id
+      WHERE f.id = auth.uid()
+      AND r.student_auth_id = students.id
+    )
+  );
