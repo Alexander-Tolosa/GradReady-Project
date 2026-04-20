@@ -37,7 +37,7 @@ function MainApp() {
   const [session, setSession] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [roleLoading, setRoleLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Safety net: force stop loading after 10 seconds
