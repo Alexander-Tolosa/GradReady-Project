@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { X, CheckCircle2, AlertTriangle, AlertCircle } from 'lucide-react';
 
 export default function StatusUpdateModal({ requirement, onClose, onSubmit, submitting }) {
   const [action, setAction] = useState('cleared'); // 'cleared' or 'needs_revision'
@@ -12,8 +12,8 @@ export default function StatusUpdateModal({ requirement, onClose, onSubmit, subm
       <div className="bg-[#18181b] border border-[#27272a] rounded-xl w-full max-w-md shadow-2xl animate-scale-in">
         <div className="flex items-center justify-between p-4 border-b border-[#27272a]">
           <div>
-            <h3 className="font-semibold text-white">Update Status</h3>
-            <p className="text-xs text-zinc-500">{requirement.students?.name}</p>
+            <h3 className="font-semibold text-white">Status Decision</h3>
+            <p className="text-xs text-zinc-500">{requirement.student_name || requirement.students?.name}</p>
           </div>
           <button 
             onClick={onClose}
@@ -37,17 +37,17 @@ export default function StatusUpdateModal({ requirement, onClose, onSubmit, subm
                     : 'border-[#27272a] bg-[#111114] text-zinc-400 hover:border-[#3f3f46]'
                 }`}
              >
-                <CheckCircle2 className="w-4 h-4" /> Clear
+                <CheckCircle2 className="w-4 h-4" /> Approve
              </button>
              <button
                 onClick={() => setAction('needs_revision')}
                 className={`flex items-center justify-center gap-2 p-3 rounded-lg border text-sm font-medium transition-all ${
                   action === 'needs_revision' 
-                    ? 'border-status-revision bg-status-revision/10 text-status-revision' 
+                    ? 'border-[#7f1d1d] bg-[#7f1d1d]/10 text-red-400' 
                     : 'border-[#27272a] bg-[#111114] text-zinc-400 hover:border-[#3f3f46]'
                 }`}
              >
-                <AlertTriangle className="w-4 h-4" /> Revise
+                <AlertCircle className="w-4 h-4" /> Need Revision
              </button>
           </div>
 
@@ -57,7 +57,7 @@ export default function StatusUpdateModal({ requirement, onClose, onSubmit, subm
               <textarea
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="Explain what needs to be fixed..."
+                placeholder="Add remarks or reason for revision..."
                 className="w-full h-24 bg-[#111114] border border-[#27272a] rounded-lg p-3 text-sm text-zinc-300 outline-none focus:border-maroon resize-none"
               />
             </div>

@@ -1,56 +1,9 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Hash, BookOpen, Clock, Upload, CheckCircle2, AlertCircle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Search, Hash, BookOpen, Clock, Upload, CheckCircle2, AlertCircle, XCircle, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { facultyService } from '../../services/facultyService';
+import StatusUpdateModal from '../../components/common/StatusUpdateModal';
 
-const STUDENTS = [
-  {
-    id: 1, 
-    name: 'Juan Dela Cruz', 
-    program: 'BS Information Technology',
-    studentId: '2021-00123',
-    yearLevel: '4th Year',
-    requirements: [
-       { id: '1-1', description: 'Capstone Project Proposal', status: 'cleared' },
-       { id: '1-2', description: 'OJT Timesheet Submission', status: 'cleared' },
-       { id: '1-3', description: 'Department Interview', status: 'cleared' }
-    ]
-  },
-  {
-    id: 2, 
-    name: 'Ana Reyes', 
-    program: 'BS Computer Science',
-    studentId: '2021-00456',
-    yearLevel: '4th Year',
-    requirements: [
-       { id: '2-1', description: 'Capstone Project Proposal', status: 'cleared' },
-       { id: '2-2', description: 'OJT Timesheet Submission', status: 'submitted' },
-       { id: '2-3', description: 'Department Interview', status: 'pending' }
-    ]
-  },
-  {
-    id: 3, 
-    name: 'Mark Lee', 
-    program: 'BS Information Systems',
-    studentId: '2021-00789',
-    yearLevel: '4th Year',
-    requirements: [
-       { id: '3-1', description: 'Capstone Project Proposal', status: 'needs_revision' },
-       { id: '3-2', description: 'OJT Timesheet Submission', status: 'missing' },
-       { id: '3-3', description: 'Department Interview', status: 'pending' }
-    ]
-  },
-  {
-    id: 4, 
-    name: 'Sarah Kim', 
-    program: 'BS Information Technology',
-    studentId: '2021-00321',
-    yearLevel: '4th Year',
-    requirements: [
-       { id: '4-1', description: 'Capstone Project Proposal', status: 'cleared' },
-       { id: '4-2', description: 'OJT Timesheet Submission', status: 'pending' },
-       { id: '4-3', description: 'Department Interview', status: 'cleared' }
-    ]
-  },
-];
+// MOCK DATA REMOVED. Using real realtime data mapping below.
 
 const statusConfig = {
   cleared: {
@@ -85,7 +38,7 @@ const statusConfig = {
   },
 };
 
-function StudentListCard({ student }) {
+function StudentListCard({ student, onRequirementClick }) {
   const [expanded, setExpanded] = useState(true);
 
   const clearedCount = student.requirements.filter((r) => r.status === 'cleared').length;
@@ -156,6 +109,7 @@ function StudentListCard({ student }) {
               return (
                 <div
                   key={req.id}
+                  onClick={() => onRequirementClick && onRequirementClick(req, student)}
                   className="flex items-center justify-between gap-4 group/row cursor-pointer"
                 >
                   <div className="flex items-center gap-2 max-w-[70%]">
@@ -178,10 +132,81 @@ function StudentListCard({ student }) {
 }
 
 export default function FacultyDashboard() {
+  const [loading, setLoading] = useState(true);
+  const [facultyData, setFacultyData] = useState(null);
+  const [studentsData, setStudentsData] = useState([]);
+  const [selectedReq, setSelectedReq] = useState(null);
+  const [submittingAction, setSubmittingAction] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const profile = await facultyService.fetchFacultyProfile();
+      setFacultyData(profile);
+
+      if (profile?.department_id) {
+        const reqs = await facultyService.fetchDepartmentSubmissions(profile.department_id);
+        
+        // Group requirements by student
+        const studentMap = {};
+        reqs.forEach(req => {
+          const authId = req.student_auth_id;
+          if (!studentMap[authId]) {
+            studentMap[authId] = {
+              id: authId,
+              name: req.students?.name || 'Unknown Student',
+              program: req.students?.program || 'N/A',
+              studentId: req.students?.student_id || 'N/A',
+              requirements: []
+            };
+          }
+          studentMap[authId].requirements.push(req);
+        });
+        setStudentsData(Object.values(studentMap));
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('Error loading data.', true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showToast = (message, isError = false) => {
+    setToast({ text: message, isError });
+    setTimeout(() => setToast(null), 5000);
+  };
+
+  const handleUpdateStatus = async (status, revisionNote) => {
+    if (!selectedReq) return;
+    try {
+      setSubmittingAction(true);
+      await facultyService.updateRequirementStatus(
+        selectedReq.requirement.id, 
+        status, 
+        revisionNote, 
+        selectedReq.requirement.student_auth_id
+      );
+      showToast(status === 'cleared' ? 'Clearance approved and email sent.' : 'Revision marked and email sent.');
+      setSelectedReq(null);
+      await loadData();
+    } catch (error) {
+      console.error(error);
+      showToast('Failed to update status: ' + error.message, true);
+    } finally {
+      setSubmittingAction(false);
+    }
+  };
+
   const stats = useMemo(() => {
     let totalReqs = 0, clearedReqs = 0, submittedReqs = 0, pendingReqs = 0, missingReqs = 0, revisionReqs = 0;
     
-    STUDENTS.forEach(student => {
+    studentsData.forEach(student => {
       student.requirements.forEach(req => {
         totalReqs++;
         if (req.status === 'cleared') clearedReqs++;
@@ -194,7 +219,7 @@ export default function FacultyDashboard() {
 
     const progress = totalReqs > 0 ? Math.round((clearedReqs / totalReqs) * 100) : 0;
     return { totalReqs, clearedReqs, submittedReqs, pendingReqs, missingReqs, revisionReqs, progress };
-  }, []);
+  }, [studentsData]);
 
   const statCards = [
     { label: 'Cleared', count: stats.clearedReqs, icon: CheckCircle2, color: 'text-status-cleared', bg: 'bg-status-cleared/10', border: 'border-status-cleared/20' },
@@ -208,19 +233,24 @@ export default function FacultyDashboard() {
     <div className="space-y-8 animate-fade-in">
       {/* Faculty Header using StudentHeader styling */}
       <div className="card p-6 bg-zinc-900 shadow-sm border-b-4 border-b-maroon">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        {loading ? (
+          <div className="flex justify-center items-center py-4 text-zinc-500">
+            <Loader2 className="w-6 h-6 animate-spin mr-2" /> Loading...
+          </div>
+        ) : (
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <div className="w-20 h-20 rounded-xl bg-zinc-800 border border-zinc-700 flex items-center justify-center">
               <span className="text-xl font-bold text-maroon-light">MS</span>
             </div>
 
             <div className="text-center md:text-left">
-              <h2 className="text-2xl font-bold text-white tracking-tight">Professor Maria Santos</h2>
-              <p className="text-zinc-500 font-medium text-xs mt-1">Department of Information Technology</p>
+              <h2 className="text-2xl font-bold text-white tracking-tight">{facultyData?.name || 'Faculty Member'}</h2>
+              <p className="text-zinc-500 font-medium text-xs mt-1">{facultyData?.departments?.name || 'Department'}</p>
 
               <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-3 text-zinc-600 font-bold text-[10px] uppercase tracking-wider">
-                <span className="flex items-center gap-1.5"><Hash className="w-3 h-3" /> 2018-0045</span>
-                <span className="flex items-center gap-1.5"><BookOpen className="w-3 h-3" /> CITE Faculty</span>
+                <span className="flex items-center gap-1.5"><Hash className="w-3 h-3" /> {facultyData?.employee_id}</span>
+                <span className="flex items-center gap-1.5"><BookOpen className="w-3 h-3" /> {facultyData?.position || 'Faculty'}</span>
               </div>
             </div>
           </div>
@@ -236,10 +266,9 @@ export default function FacultyDashboard() {
               <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                 <circle cx="50" cy="50" r="40" stroke="#27272a" strokeWidth="10" fill="none" />
                 <circle cx="50" cy="50" r="40" stroke="#800000" strokeWidth="10" fill="none" strokeDasharray={`${stats.progress * 2.51} 251`} className="transition-all duration-1000" />
-              </svg>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Progress Overview similar to the Student Dashboard one */}
@@ -281,13 +310,43 @@ export default function FacultyDashboard() {
          </div>
          
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {STUDENTS.map((student, index) => (
-              <div key={student.id} className="animate-slide-up" style={{ animationDelay: `${index * 30}ms` }}>
-                <StudentListCard student={student} />
-              </div>
-            ))}
+            {studentsData.length === 0 && !loading ? (
+              <div className="col-span-full text-center py-10 text-zinc-500">No submissions found.</div>
+            ) : (
+              studentsData.map((student, index) => (
+                <div key={student.id} className="animate-slide-up" style={{ animationDelay: `${index * 30}ms` }}>
+                  <StudentListCard 
+                     student={student} 
+                     onRequirementClick={(req, stu) => {
+                        // Include student name for the modal
+                        const mergedReq = { ...req, student_name: stu.name };
+                        setSelectedReq({ requirement: mergedReq, student: stu });
+                     }} 
+                  />
+                </div>
+              ))
+            )}
          </div>
       </div>
+      {/* Modals and Toasts */}
+      {selectedReq && (
+        <StatusUpdateModal 
+          requirement={selectedReq.requirement}
+          onClose={() => setSelectedReq(null)}
+          onSubmit={handleUpdateStatus}
+          submitting={submittingAction}
+        />
+      )}
+
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 animate-slide-up">
+          <div className={`px-4 py-3 rounded-lg shadow-lg text-sm font-medium flex items-center gap-2 border bg-[#18181b]
+            ${toast.isError ? 'border-status-missing/50 text-status-missing' : 'border-[#27272a] text-status-cleared'}`}>
+            <CheckCircle2 className="w-4 h-4" />
+            {toast.text}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

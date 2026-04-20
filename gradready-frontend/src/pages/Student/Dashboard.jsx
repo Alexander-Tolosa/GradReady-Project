@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Building2, MapPin, LogOut, Loader2 } from 'lucide-react';
+import { Building2, MapPin, LogOut, Loader2, Bell } from 'lucide-react';
 import StudentHeader from '../../components/layout/StudentHeader';
 import DepartmentCard from '../../components/common/DepartmentCard';
 import ProgressOverview from '../../components/common/ProgressOverview';
 import InfoDirectory from '../../components/common/InfoDirectory';
 import UploadModal from '../../components/common/UploadModal';
+import NotificationsModal from '../../components/common/NotificationsModal';
 import { authService } from '../../services/authService';
 import { clearanceService } from '../../services/clearanceService';
 import { storageService } from '../../services/storageService';
+import { notificationService } from '../../services/notificationService';
 
 export default function Dashboard({ session }) {
   const [loading, setLoading] = useState(true);
@@ -16,6 +18,8 @@ export default function Dashboard({ session }) {
   const [showDirectory, setShowDirectory] = useState(false);
   const [selectedRequirement, setSelectedRequirement] = useState(null);
   const [notification, setNotification] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [showNotificationsModal, setShowNotificationsModal] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -30,6 +34,9 @@ export default function Dashboard({ session }) {
 
       const depts = await clearanceService.fetchClearanceData();
       setDepartments(depts);
+
+      const notifs = await notificationService.fetchNotifications();
+      setNotifications(notifs);
     } catch (error) {
       console.error(error);
       showNotification('Error loading data: ' + error.message, true);
@@ -82,6 +89,18 @@ export default function Dashboard({ session }) {
     setTimeout(() => setNotification(null), 4000);
   };
 
+  const handleMarkAsRead = async () => {
+    try {
+      await notificationService.markAllAsRead();
+      const notifs = await notificationService.fetchNotifications();
+      setNotifications(notifs);
+    } catch (error) {
+      console.error('Failed to mark read', error);
+    }
+  };
+
+  const unreadNotifs = notifications?.filter(n => !n.is_read).length || 0;
+
   return (
     <div className="min-h-screen bg-[#111114]">
       {/* Header */}
@@ -112,6 +131,16 @@ export default function Dashboard({ session }) {
                   <><Building2 className="w-4 h-4" /><span className="hidden sm:inline">Clearance Matrix</span></>
                 ) : (
                   <><MapPin className="w-4 h-4" /><span className="hidden sm:inline">Office Directory</span></>
+                )}
+              </button>
+              <button
+                onClick={() => setShowNotificationsModal(true)}
+                className="relative p-2 text-zinc-400 hover:text-white hover:bg-[#27272a] rounded-lg transition-colors"
+                title="Notifications"
+              >
+                <Bell className="w-5 h-5" />
+                {unreadNotifs > 0 && (
+                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-maroon border border-[#18181b]" />
                 )}
               </button>
               <button
@@ -173,6 +202,15 @@ export default function Dashboard({ session }) {
           onClose={() => setSelectedRequirement(null)}
           onUpload={handleUpload}
           uploading={loading}
+        />
+      )}
+
+      {/* Notifications Modal */}
+      {showNotificationsModal && (
+        <NotificationsModal
+          notifications={notifications}
+          onClose={() => setShowNotificationsModal(false)}
+          onMarkAsRead={handleMarkAsRead}
         />
       )}
 

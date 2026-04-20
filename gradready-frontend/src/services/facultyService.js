@@ -46,16 +46,18 @@ export const facultyService = {
 
     if (error) throw error;
 
-    // Send notification to student
+    // Send notification to student dashboard and mock dispatch email
     let message = '';
     if (status === 'cleared') {
-      message = 'Your requirement has been cleared.';
+      message = 'Clearance granted: Your requirement has been marked as cleared.';
     } else if (status === 'needs_revision') {
-      message = `Revision requested: ${revisionNote}`;
+      message = `Revision requested by faculty: ${revisionNote}`;
     }
 
     if (message && studentId) {
        await notificationService.createNotification(studentId, 'status_update', message, requirementId).catch(console.error);
+       // Mock Email Dispatch simulated here
+       console.log(`[MOCK EMAIL DISPATCH] Sent to student ${studentId}: User dashboard alert initialized. Content: "${message}"`);
     }
   }
 };
