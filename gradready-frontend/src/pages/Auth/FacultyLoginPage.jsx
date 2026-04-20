@@ -57,17 +57,6 @@ export default function FacultyLoginPage() {
               Process requirements, approve documents, and help students reach their graduation goals.
             </p>
 
-            {/* Stats row */}
-            <div className="flex gap-8 mt-10">
-              <div>
-                <p className="text-2xl font-bold text-white">Fast</p>
-                <p className="text-xs text-zinc-500 mt-0.5">Processing</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">Clear</p>
-                <p className="text-xs text-zinc-500 mt-0.5">Communication</p>
-              </div>
-            </div>
           </div>
 
           {/* Bottom */}

@@ -57,17 +57,6 @@ export default function AdminLoginPage() {
               Oversee university departments, handle final approvals, and ensure a smooth graduation process.
             </p>
 
-            {/* Stats row */}
-            <div className="flex gap-8 mt-10">
-              <div>
-                <p className="text-2xl font-bold text-white">100%</p>
-                <p className="text-xs text-zinc-500 mt-0.5">Control</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">Central</p>
-                <p className="text-xs text-zinc-500 mt-0.5">Hub</p>
-              </div>
-            </div>
           </div>
 
           {/* Bottom */}

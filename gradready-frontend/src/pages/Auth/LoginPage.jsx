@@ -57,21 +57,6 @@ export default function LoginPage() {
               Track requirements, upload documents, and get cleared across all departments — all in one place.
             </p>
 
-            {/* Stats row */}
-            <div className="flex gap-8 mt-10">
-              <div>
-                <p className="text-2xl font-bold text-white">6</p>
-                <p className="text-xs text-zinc-500 mt-0.5">Departments</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">100%</p>
-                <p className="text-xs text-zinc-500 mt-0.5">Digital</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-white">24/7</p>
-                <p className="text-xs text-zinc-500 mt-0.5">Access</p>
-              </div>
-            </div>
           </div>
 
           {/* Bottom */}
