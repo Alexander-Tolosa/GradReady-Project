@@ -23,7 +23,10 @@ function StatCard({ label, value, icon: Icon }) {
 }
 
 // ─── Overview Tab ─────────────────────────────────────────────────────────────
-function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport, onViewAll }) {
+function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport }) {
+  const [expanded, setExpanded] = useState(false);
+  const displayRequests = expanded ? recentRequests : recentRequests.slice(0, 10);
+
   return (
     <div className="space-y-8 animate-fade-in max-w-7xl">
       
@@ -68,10 +71,10 @@ function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport
         <div className="px-6 py-5 border-b border-[#27272a] flex items-center justify-between bg-[#111114]/50">
           <h3 className="text-xs uppercase tracking-[0.15em] text-zinc-400 font-bold">Ledger Activity</h3>
           <button 
-            onClick={onViewAll}
+            onClick={() => setExpanded(!expanded)}
             className="text-xs font-semibold text-white hover:text-maroon-light transition-colors"
           >
-            View All
+            {expanded ? 'Collapse' : 'View All'}
           </button>
         </div>
         
@@ -79,7 +82,7 @@ function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport
           {recentRequests.length === 0 ? (
              <div className="p-8 text-center text-zinc-500 text-sm">No recent ledger activity.</div>
           ) : (
-            recentRequests.map((req) => {
+            displayRequests.map((req) => {
               // Determine Icon and Styling based on status
               const isCleared = req.status === 'cleared';
               const isFlagged = req.status === 'needs_revision';
@@ -368,7 +371,6 @@ export default function Dashboard({ session }) {
               onApprove={handleApprove}
               onReject={handleReject}
               onExport={handleExportLedger}
-              onViewAll={() => setActiveTab('notifications')}
             />
           )}
         </div>
