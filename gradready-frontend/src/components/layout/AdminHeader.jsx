@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Hash } from 'lucide-react';
+import { Shield } from 'lucide-react';
 
 export default function AdminHeader({ admin, stats }) {
   return (
@@ -21,40 +21,22 @@ export default function AdminHeader({ admin, stats }) {
 
         {/* Admin Info */}
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xl font-semibold text-white leading-tight">
-              {admin?.name || 'Administrator'}
-            </h2>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-maroon/20 text-maroon-light uppercase tracking-wider">
-              <Shield className="w-3 h-3" />
-              System Admin
-            </span>
-          </div>
-          
-          <div className="flex flex-wrap gap-x-5 gap-y-1.5 mt-2.5">
-            <div className="flex items-center gap-1.5 text-zinc-500 text-xs">
-              <Hash className="w-3.5 h-3.5" />
-              <span>{admin?.employee_id || 'ID Unknown'}</span>
-            </div>
+          <h2 className="text-xl font-semibold text-white leading-tight">
+            {admin?.name || 'Administrator'}
+          </h2>
+          <div className="flex items-center gap-1 mt-1.5">
+            <Shield className="w-3 h-3 text-maroon-light" />
+            <span className="text-xs font-medium text-maroon-light uppercase tracking-wider">System Admin</span>
           </div>
         </div>
 
-        {/* Progress Circle (System Health) */}
+        {/* Progress Circle */}
         <div className="flex-shrink-0">
           <div className="relative w-20 h-20">
             <svg className="w-20 h-20 -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#27272a" strokeWidth="6" fill="none" />
               <circle
-                cx="50"
-                cy="50"
-                r="42"
-                stroke="#27272a"
-                strokeWidth="6"
-                fill="none"
-              />
-              <circle
-                cx="50"
-                cy="50"
-                r="42"
+                cx="50" cy="50" r="42"
                 stroke="#7f1d1d"
                 strokeWidth="6"
                 fill="none"
