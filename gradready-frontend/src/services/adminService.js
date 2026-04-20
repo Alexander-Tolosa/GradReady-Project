@@ -16,7 +16,6 @@ export const adminService = {
   },
 
   async fetchSystemData() {
-    // Fetch all students, all requirements, and all departments
     const [
       { data: students, error: studentsError },
       { data: requirements, error: reqError },
@@ -31,7 +30,6 @@ export const adminService = {
     if (reqError) throw reqError;
     if (deptError) throw deptError;
 
-    // Calculate System Stats
     const totalStudents = students.length;
     const totalReqs = requirements.length;
     const clearedReqs = requirements.filter((r) => r.status === 'cleared').length;
@@ -39,8 +37,6 @@ export const adminService = {
     const pendingReqs = requirements.filter((r) => r.status === 'pending').length;
     const missingReqs = requirements.filter((r) => r.status === 'missing').length;
     const revisionReqs = requirements.filter((r) => r.status === 'needs_revision').length;
-    
-    // Overall Progress
     const overallProgress = totalReqs > 0 ? Math.round((clearedReqs / totalReqs) * 100) : 0;
 
     const stats = {
@@ -54,30 +50,33 @@ export const adminService = {
       overallProgress
     };
 
-    // Calculate Department Level Data (aggregate)
     const departmentData = departments.map(dept => {
       const deptReqs = requirements.filter(r => r.department_id === dept.id);
-      return {
-        ...dept,
-        requirements: deptReqs // We map this even though it's all students' requirements for that dept
-      };
+      return { ...dept, requirements: deptReqs };
     });
 
-    // Map requirements to students for Student Roster
     const mappedStudents = students.map(student => {
       const studentReqs = requirements.filter(r => r.student_auth_id === student.id);
       const studentTotalReqs = studentReqs.length;
       const studentClearedReqs = studentReqs.filter(r => r.status === 'cleared').length;
       const progress = studentTotalReqs > 0 ? Math.round((studentClearedReqs / studentTotalReqs) * 100) : 0;
-      
-      return {
-        ...student,
-        requirements: studentReqs,
-        progress
-      };
+      return { ...student, requirements: studentReqs, progress };
     });
 
-    return { stats, mappedStudents, departmentData };
+    const recentRequests = requirements
+      .filter(r => r.status === 'submitted' || r.status === 'pending')
+      .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+      .slice(0, 10)
+      .map(r => {
+        const student = students.find(s => s.id === r.student_auth_id);
+        return {
+          ...r,
+          studentName: student?.name ?? '—',
+          studentDepartment: student?.department ?? '—',
+        };
+      });
+
+    return { stats, mappedStudents, departmentData, recentRequests };
   },
 
   async fetchAllUsers() {
@@ -100,10 +99,16 @@ export const adminService = {
   },
 
   async updateUserRole() {
-     // NOTE: User roles are determined by which table they are in.
-     // Moving a user requires deleting from one table and inserting to another.
-     // This is a complex secure operation that typically requires a backend function.
-     throw new Error("Role updates are currently disabled in the UI for security.");
+    throw new Error("Role updates are currently disabled in the UI for security.");
+  },
+
+  async updateClearanceStatus(requirementId, newStatus) {
+    const { error } = await supabase
+      .from('requirements')
+      .update({ status: newStatus, updated_at: new Date() })
+      .eq('id', requirementId);
+
+    if (error) throw error;
   },
 
   async undoStatusChange(requirementId, prevStatus = 'pending') {
