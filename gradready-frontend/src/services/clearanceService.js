@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-// Default requirements to spawn for a new student
+
 const DEFAULT_REQUIREMENTS = [
   { department_id: 'library', description: 'Return all borrowed books', due_date: '2025-03-15' },
   { department_id: 'library', description: 'Settle overdue fines', due_date: '2025-03-20' },
@@ -27,7 +27,7 @@ export const clearanceService = {
       .eq('id', session.user.id)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error; // PGRST116 is no rows
+    if (error && error.code !== 'PGRST116') throw error;
     return data;
   },
 
@@ -35,16 +35,16 @@ export const clearanceService = {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
-    // Check if requirements already exist
     const { data: existing, error: checkError } = await supabase
       .from('requirements')
       .select('id')
+      .eq('student_auth_id', session.user.id)
       .limit(1);
 
     if (checkError) throw checkError;
-    if (existing && existing.length > 0) return; // Already initialized
+    if (existing && existing.length > 0) return;
 
-    // Insert defaults
+
     const insertData = DEFAULT_REQUIREMENTS.map(req => ({
       ...req,
       student_auth_id: session.user.id,
@@ -59,7 +59,7 @@ export const clearanceService = {
   },
 
   async fetchClearanceData() {
-    // Note: Due to RLS, this automatically only fetches requirements for the logged-in user
+
     const [{ data: departments, error: deptError }, { data: requirements, error: reqError }] = await Promise.all([
       supabase.from('departments').select('*').order('name'),
       supabase.from('requirements').select('*').order('due_date')
@@ -68,7 +68,7 @@ export const clearanceService = {
     if (deptError) throw deptError;
     if (reqError) throw reqError;
 
-    // Map requirements into their departments
+
     return departments.map(dept => ({
       ...dept,
       requirements: requirements.filter(r => r.department_id === dept.id)
