@@ -1,7 +1,7 @@
 import { supabase } from './supabase';
 export { supabase };
 
-// Helper: wraps any promise with a timeout
+
 function withTimeout(promise, ms = 5000, message = 'Request timed out') {
   const timeout = new Promise((_, reject) =>
     setTimeout(() => reject(new Error(message)), ms)
@@ -49,17 +49,33 @@ export const authService = {
     }
   },
 
+  // ← FIXED: added timeout so it never hangs forever
   async getUserRole(userId) {
     if (!userId) return null;
 
-    const { data: student } = await supabase.from('students').select('id').eq('id', userId).single();
-    if (student) return 'student';
+    try {
+      const { data: student } = await withTimeout(
+        supabase.from('students').select('id').eq('id', userId).single(),
+        5000, 'getUserRole timed out'
+      );
+      if (student) return 'student';
 
-    const { data: admin } = await supabase.from('admins').select('id, role').eq('id', userId).single();
-    if (admin) return admin.role || 'admin';
+      const { data: admin } = await withTimeout(
+        supabase.from('admins').select('id, role').eq('id', userId).single(),
+        5000, 'getUserRole timed out'
+      );
+      if (admin) return admin.role || 'admin';
 
-    const { data: faculty } = await supabase.from('faculty').select('id, role').eq('id', userId).single();
-    if (faculty) return faculty.role || 'faculty';
+      const { data: faculty } = await withTimeout(
+        supabase.from('faculty').select('id, role').eq('id', userId).single(),
+        5000, 'getUserRole timed out'
+      );
+      if (faculty) return faculty.role || 'faculty';
+
+    } catch (err) {
+      console.warn('getUserRole failed:', err.message);
+      return null;
+    }
 
     return null;
   },
