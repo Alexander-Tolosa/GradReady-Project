@@ -183,7 +183,7 @@ ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'clearance-doc
 
 -- 7. Seed Data
 INSERT INTO public.departments (id, name, icon, head) VALUES
-('library', 'University Library', '📚', 'Ms. Elena R. Santos'),
+('library', 'University Library', '📚', 'Mr. Michael Tolosa'),
 ('registrar', 'Registrar''s Office', '📋', 'Dr. Marco L. Villanueva'),
 ('dean', 'Dean''s Office (CITE)', '🎓', 'Dr. Anna Mae T. Cruz'),
 ('accounting', 'Accounting Office', '💰', 'Mr. Roberto A. Domingo'),
@@ -192,7 +192,7 @@ INSERT INTO public.departments (id, name, icon, head) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.offices (id, name, location, room, hours, phone, email, head, status) VALUES
-('library', 'University Library', 'Main Building, 2nd Floor', 'Room 201-205', 'Mon–Fri: 7:30 AM – 6:00 PM | Sat: 8:00 AM – 12:00 PM', '(033) 337-4841 loc. 210', 'library@usa.edu.ph', 'Ms. Elena R. Santos', 'open'),
+('library', 'University Library', 'Main Building, 2nd Floor', 'Room 201-205', 'Mon–Fri: 7:30 AM – 6:00 PM | Sat: 8:00 AM – 12:00 PM', '(033) 337-4841 loc. 210', 'library@usa.edu.ph', 'Mr. Michael Tolosa', 'open'),
 ('registrar', 'Registrar''s Office', 'Administration Building, Ground Floor', 'Room 101', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 101', 'registrar@usa.edu.ph', 'Dr. Marco L. Villanueva', 'open'),
 ('dean', 'Dean''s Office (CITE)', 'CITE Building, 3rd Floor', 'Room 301', 'Mon–Fri: 8:00 AM – 5:00 PM', '(033) 337-4841 loc. 301', 'cite.dean@usa.edu.ph', 'Dr. Anna Mae T. Cruz', 'open'),
 ('accounting', 'Accounting Office', 'Administration Building, Ground Floor', 'Room 103-104', 'Mon–Fri: 8:00 AM – 4:30 PM', '(033) 337-4841 loc. 103', 'accounting@usa.edu.ph', 'Mr. Roberto A. Domingo', 'open'),
@@ -214,6 +214,8 @@ INSERT INTO public.requirements (student_auth_id, department_id, description, st
 ('182b8db7-6083-4b73-b089-4f4ed1141d7d', 'it-office', 'Return borrowed IT equipment', 'pending', '2025-03-12'),
 ('182b8db7-6083-4b73-b089-4f4ed1141d7d', 'it-office', 'Grade Consultation', 'pending', '2025-03-15')
 ON CONFLICT DO NOTHING;
+
+DROP POLICY IF EXISTS "Faculty can view department students." ON public.students;
 
 CREATE POLICY "Faculty can view department students."
   ON public.students FOR SELECT

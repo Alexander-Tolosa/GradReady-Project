@@ -9,7 +9,7 @@ export default function ClearanceDetail({ session }) {
   // Mock data matching Screenshot 5 (University Library)
   const [department] = useState({
     name: 'University Library',
-    head: 'Ms. Elena R. Santos',
+    head: 'Mr. Michael Tolosa',
     progress: 33,
     requirements: [
       { id: 1, text: 'Return all borrowed books', status: 'cleared' },
