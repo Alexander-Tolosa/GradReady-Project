@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { LogOut, Search, Hash, BookOpen, Clock, Upload, CheckCircle2, AlertCircle, XCircle, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { LogOut, Search, Hash, BookOpen, Clock, Upload, CheckCircle2, AlertCircle, XCircle, ChevronDown, ChevronUp, Loader2, Bell } from 'lucide-react';
 import { authService } from '../../services/authService';
 import { facultyService } from '../../services/facultyService';
 import { notificationService } from '../../services/notificationService';
 import StatusUpdateModal from '../../components/common/StatusUpdateModal';
 import AdminNotifications from '../../components/common/AdminNotifications';
+import DashboardStatCard from '../../components/common/DashboardStatCard';
 
 const statusConfig = {
   cleared: { icon: CheckCircle2, label: 'Cleared', className: 'status-cleared', dotColor: 'bg-status-cleared' },
@@ -203,144 +204,169 @@ export default function Dashboard({ session }) {
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
+  const navigation = [
+    { id: 'submissions', label: 'Submissions', icon: BookOpen },
+    { id: 'notifications', label: 'Notifications', icon: Bell, badge: unreadCount },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#111114]">
-      <header className="bg-[#18181b] border-b border-[#27272a] sticky top-0 z-40">
-        <div className="w-full px-4 sm:px-6 lg:px-10">
-          <div className="flex items-center justify-between py-4">
-            <button onClick={() => { setActiveTab('submissions'); loadData(); }} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <img src="/images/usa-seal.png" alt="USA Seal" className="w-9 h-9 rounded-lg object-contain" />
-              <div className="text-left">
-                <h1 className="text-lg font-semibold text-white leading-none">GradReady Faculty</h1>
-                <p className="text-zinc-500 text-xs mt-0.5">Department Portal</p>
-              </div>
-            </button>
+    <div className="h-screen bg-[#111114] flex overflow-hidden">
+      {/* ─── Sidebar ─── */}
+      <aside className="w-64 bg-[#18181b] border-r border-[#27272a] shrink-0 flex flex-col z-30 h-full">
+        {/* Branding */}
+        <button 
+          onClick={() => { setActiveTab('submissions'); loadData(); }}
+          className="p-6 flex items-center gap-4 border-b border-[#27272a]/50 text-left w-full hover:bg-[#27272a]/30 transition-colors"
+        >
+           <img src="/images/usa-seal.png" alt="USA Seal" className="w-10 h-10 rounded-xl object-contain bg-zinc-800" />
+           <div>
+             <h1 className="text-[17px] font-bold text-white tracking-widest leading-none">GRADREADY</h1>
+             <p className="text-[11px] text-zinc-500 uppercase font-medium mt-1">Faculty Portal</p>
+           </div>
+        </button>
 
-            <div className="flex items-center gap-3">
-              <div className="flex bg-[#27272a] rounded-lg p-1">
-                <button
-                  onClick={() => setActiveTab('submissions')}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${activeTab === 'submissions' ? 'bg-[#3f3f46] text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
-                >
-                  <BookOpen className="w-4 h-4" /> Submissions
-                </button>
-                <button
-                  onClick={() => setActiveTab('notifications')}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors relative ${activeTab === 'notifications' ? 'bg-[#3f3f46] text-white' : 'text-zinc-400 hover:text-zinc-200'}`}
-                >
-                  Notifications
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-700 rounded-full border-2 border-[#27272a]" />
-                  )}
-                </button>
-              </div>
-              <button onClick={handleSignOut} className="p-2 text-zinc-400 hover:text-white hover:bg-[#27272a] rounded-lg transition-colors">
-                <LogOut className="w-5 h-5" />
+        {/* Navigation Items */}
+        <nav className="flex-1 py-6 px-3 flex flex-col gap-1.5">
+          {navigation.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`flex items-center justify-between w-full px-4 py-3 rounded-lg transition-all border ${
+                  isActive 
+                  ? 'bg-[#111114] border-[#27272a] text-white shadow-sm' 
+                  : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-[#27272a]/30'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <item.icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
+                  <span className="text-sm font-medium">{item.label}</span>
+                </div>
+                {item.badge > 0 && (
+                  <span className="bg-maroon text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                    {item.badge}
+                  </span>
+                )}
               </button>
-            </div>
-          </div>
-        </div>
-      </header>
+            )
+          })}
+        </nav>
 
-      <main className="w-full px-4 sm:px-6 lg:px-10 py-6">
-        {loading && !facultyData ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <Loader2 className="w-8 h-8 text-red-800 animate-spin" />
-            <p className="text-zinc-500 text-sm">Loading department data...</p>
-          </div>
-        ) : !facultyData ? (
-          <div className="text-center py-20 text-zinc-500">No faculty profile found.</div>
-        ) : activeTab === 'notifications' ? (
-          <AdminNotifications notifications={notifications} onMarkAsRead={handleMarkAsRead} />
-        ) : (
-          <>
-            {/* Faculty Profile Card */}
-            <div className="bg-[#18181b] border border-[#27272a] rounded-xl p-6 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-red-900 flex items-center justify-center text-lg font-bold text-white">
+        {/* User Profile at Bottom */}
+        <div className="p-4 border-t border-[#27272a]">
+          <div className="flex items-center justify-between px-2 cursor-default relative group">
+             <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-red-900 flex items-center justify-center font-bold text-lg text-white ring-2 ring-transparent group-hover:ring-red-800 transition-all">
                   {facultyData?.name?.split(' ').map(n => n[0]).join('').slice(0, 2) || 'FA'}
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-lg font-bold text-white">{facultyData?.name || 'Faculty Member'}</h2>
-                    <span className="text-[10px] font-bold bg-red-900/30 text-red-400 px-2 py-0.5 rounded uppercase tracking-wider">
-                      {facultyData?.departments?.name || 'Department'}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4 mt-1 text-zinc-500 text-xs">
-                    <span className="flex items-center gap-1"><Hash className="w-3 h-3" />{facultyData?.employee_id}</span>
-                    <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" />{facultyData?.position || 'Instructor'}</span>
-                  </div>
+                <div className="text-left hidden md:block">
+                  <p className="text-sm font-semibold text-white leading-tight">{facultyData?.name || 'Faculty Member'}</p>
+                  <p className="text-[11px] text-zinc-500 font-medium truncate max-w-[140px] uppercase">
+                     {facultyData?.departments?.name || 'Department'}
+                  </p>
                 </div>
-              </div>
-              <div className="text-right">
-                <p className="text-2xl font-black text-white">{stats.progress}%</p>
-                <p className="text-[10px] text-zinc-500 uppercase tracking-widest">Overall Cleared</p>
-              </div>
-            </div>
+             </div>
+             
+             <button
+               onClick={handleSignOut}
+               className="p-2 -mr-2 text-zinc-500 hover:text-white rounded-lg hover:bg-zinc-800 transition-colors"
+               title="Sign Out"
+             >
+               <LogOut className="w-4 h-4" />
+             </button>
+          </div>
+        </div>
+      </aside>
 
-            {/* Stat Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-              {[
-                { label: 'Cleared', count: stats.cleared, icon: CheckCircle2, color: 'text-green-400' },
-                { label: 'Submitted', count: stats.submitted, icon: Upload, color: 'text-blue-400' },
-                { label: 'Pending', count: stats.pending, icon: Clock, color: 'text-zinc-400' },
-                { label: 'Needs Revision', count: stats.revision, icon: AlertCircle, color: 'text-yellow-400' },
-                { label: 'Missing', count: stats.missing, icon: XCircle, color: 'text-red-400' },
-              ].map(card => {
-                const Icon = card.icon;
-                return (
-                  <div key={card.label} className="bg-[#18181b] border border-[#27272a] rounded-xl p-4">
-                    <div className="flex items-center gap-3">
-                      <Icon className={`w-5 h-5 ${card.color}`} />
-                      <div>
-                        <p className={`text-xl font-black ${card.color}`}>{card.count}</p>
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-widest">{card.label}</p>
+      {/* ─── Main Content ─── */}
+      <main className="flex-1 flex flex-col min-w-0 bg-[#111114]">
+        {/* Top Header */}
+        <header className="h-20 px-8 flex items-center justify-between border-b border-[#27272a] sticky top-0 bg-[#111114] z-20">
+           {/* Search Placeholder */}
+           <div className="w-80 h-11 bg-[#18181b] border border-[#27272a] rounded-xl flex items-center px-4 text-zinc-500 shadow-sm focus-within:border-zinc-600 focus-within:ring-1 focus-within:ring-zinc-600 transition-all">
+             <Search className="w-4 h-4 mr-3" />
+             <input 
+               type="text" 
+               placeholder="Search students..." 
+               value={search}
+               onChange={e => setSearch(e.target.value)}
+               className="w-full bg-transparent border-none outline-none text-sm text-white placeholder:text-zinc-600"
+             />
+           </div>
+
+           {/* Top Right Actions */}
+           <div className="flex items-center gap-4">
+              <button 
+                onClick={() => setActiveTab('notifications')}
+                className="relative p-2.5 text-zinc-400 hover:text-white bg-[#18181b] border border-[#27272a] rounded-xl transition-colors shadow-sm"
+              >
+                <Bell className="w-5 h-5" />
+                {unreadCount > 0 && <div className="absolute top-2 right-2.5 w-2 h-2 bg-red-700 rounded-full ring-2 ring-[#111114]" />}
+              </button>
+           </div>
+        </header>
+
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+          {loading && !facultyData ? (
+            <div className="h-full flex flex-col items-center justify-center gap-4">
+              <Loader2 className="w-8 h-8 text-red-800 animate-spin" />
+              <p className="text-zinc-500 text-sm">Loading department data...</p>
+            </div>
+          ) : !facultyData ? (
+             <div className="h-full flex items-center justify-center text-zinc-500">
+              <p>No faculty profile found. Please contact support.</p>
+            </div>
+          ) : activeTab === 'notifications' ? (
+             <div className="animate-fade-in bg-[#18181b] border border-[#27272a] rounded-xl overflow-hidden shadow-sm p-6 max-w-5xl mx-auto">
+              <AdminNotifications notifications={notifications} onMarkAsRead={handleMarkAsRead} />
+             </div>
+          ) : (
+            <div className="animate-fade-in space-y-8 max-w-7xl mx-auto">
+              {/* Stat Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+                <DashboardStatCard label="Cleared" value={stats.cleared} icon={CheckCircle2} valueColor="text-green-400" />
+                <DashboardStatCard label="Submitted" value={stats.submitted} icon={Upload} valueColor="text-blue-400" />
+                <DashboardStatCard label="Pending" value={stats.pending} icon={Clock} valueColor="text-zinc-400" />
+                <DashboardStatCard label="Review" value={stats.revision} icon={AlertCircle} valueColor="text-yellow-400" />
+                <DashboardStatCard label="Missing" value={stats.missing} icon={XCircle} valueColor="text-red-400" />
+              </div>
+
+              {/* Student Clearance Matrix */}
+              <div className="bg-[#18181b] rounded-xl border border-[#27272a] overflow-hidden">
+                <div className="px-6 py-5 border-b border-[#27272a] flex items-center justify-between bg-[#111114]/50">
+                  <h3 className="text-xs uppercase tracking-[0.15em] text-zinc-400 font-bold">Student Clearance Matrix</h3>
+                  <span className="text-[10px] bg-zinc-800 text-zinc-400 px-2 py-1 rounded-md font-bold">
+                    {stats.cleared}/{stats.total} CLEARED
+                  </span>
+                </div>
+                
+                <div className="p-6 bg-[#111114]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                    {filteredStudents.length === 0 ? (
+                      <div className="col-span-full text-center py-10 text-zinc-500">
+                        {search ? 'No students match your search.' : 'No submissions found for your department.'}
                       </div>
-                    </div>
+                    ) : (
+                      filteredStudents.map((student, index) => (
+                        <div key={student.id} className="animate-fade-in" style={{ animationDelay: `${index * 30}ms` }}>
+                          <StudentListCard
+                            student={student}
+                            onRequirementClick={(req, stu) => setSelectedReq({ requirement: { ...req, student_name: stu.name }, student: stu })}
+                          />
+                        </div>
+                      ))
+                    )}
                   </div>
-                );
-              })}
-            </div>
-
-            {/* Student Clearance Matrix */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
-              <div>
-                <h3 className="text-lg font-bold text-white">Student Clearance Matrix</h3>
-                <p className="text-zinc-500 text-xs mt-0.5">{studentsData.length} students · {stats.cleared}/{stats.total} requirements cleared</p>
-              </div>
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                <input
-                  type="text"
-                  placeholder="Search students..."
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-[#18181b] border border-[#27272a] rounded-lg text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-600"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredStudents.length === 0 ? (
-                <div className="col-span-full text-center py-10 text-zinc-500">
-                  {search ? 'No students match your search.' : 'No submissions found for your department.'}
                 </div>
-              ) : (
-                filteredStudents.map((student, index) => (
-                  <div key={student.id} style={{ animationDelay: `${index * 30}ms` }}>
-                    <StudentListCard
-                      student={student}
-                      onRequirementClick={(req, stu) => setSelectedReq({ requirement: { ...req, student_name: stu.name }, student: stu })}
-                    />
-                  </div>
-                ))
-              )}
+              </div>
             </div>
-          </>
-        )}
+          )}
+        </div>
       </main>
 
+      {/* Modals and Toasts */}
       {selectedReq && (
         <StatusUpdateModal
           requirement={selectedReq.requirement}
@@ -351,9 +377,9 @@ export default function Dashboard({ session }) {
       )}
 
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50">
-          <div className={`px-4 py-3 rounded-lg shadow-lg text-sm font-medium flex items-center gap-2 border bg-[#18181b] ${toast.isError ? 'border-red-800 text-red-400' : 'border-[#27272a] text-green-400'}`}>
-            <CheckCircle2 className="w-4 h-4" />
+        <div className="fixed bottom-6 right-6 z-50 animate-slide-up">
+          <div className={`px-5 py-3 rounded-xl shadow-2xl text-sm font-medium flex items-center gap-3 border bg-[#18181b] ${toast.isError ? 'border-red-800/30 text-red-400' : 'border-[#27272a] text-green-400'}`}>
+            {toast.isError ? <AlertCircle className="w-4 h-4 shrink-0" /> : <CheckCircle2 className="w-4 h-4 shrink-0" />}
             {toast.text}
           </div>
         </div>

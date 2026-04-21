@@ -7,22 +7,7 @@ import { authService } from '../../services/authService';
 import { adminService } from '../../services/adminService';
 import { notificationService } from '../../services/notificationService';
 
-// ─── StatCard ─────────────────────────────────────────────────────────────────
-function StatCard({ label, value, icon: Icon }) {
-  return (
-    <div className="bg-[#18181b] rounded-xl p-6 relative overflow-hidden border border-[#27272a] group shadow-sm">
-      <div className="relative z-10 space-y-1">
-        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold">{label}</p>
-        <p className="text-4xl font-black text-white tracking-tighter">{value ?? '—'}</p>
-      </div>
-      <div className="absolute -right-6 -bottom-6 text-white/[0.03] group-hover:scale-110 transition-transform duration-500 pointer-events-none">
-        <Icon className="w-32 h-32" strokeWidth={1.5} />
-      </div>
-    </div>
-  );
-}
-
-// ─── Overview Tab ─────────────────────────────────────────────────────────────
+import DashboardStatCard from '../../components/common/DashboardStatCard';// ─── Overview Tab ─────────────────────────────────────────────────────────────
 function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport }) {
   return (
     <div className="space-y-8 animate-fade-in max-w-7xl">
@@ -41,22 +26,22 @@ function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <StatCard
+        <DashboardStatCard
           label="Total Students"
           value={stats?.totalStudents?.toLocaleString()}
           icon={Users}
         />
-        <StatCard
+        <DashboardStatCard
           label="Pending Clearances"
           value={stats?.pendingReqs?.toLocaleString()}
           icon={Clock}
         />
-        <StatCard
+        <DashboardStatCard
           label="Approved Clearances"
           value={stats?.clearedReqs?.toLocaleString()}
           icon={FileCheck}
         />
-        <StatCard
+        <DashboardStatCard
           label="Active Departments"
           value={stats?.departmentsCount ?? 24} // Mocked count or add to payload
           icon={Building2}
