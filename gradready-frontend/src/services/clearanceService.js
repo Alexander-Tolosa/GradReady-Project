@@ -94,6 +94,11 @@ export const clearanceService = {
       .order('name');
 
     if (error) throw error;
-    return data;
+    
+    // Data normalization for Library Head (Ensures UI is updated even if DB is stale)
+    return (data || []).map(office => ({
+      ...office,
+      head: office.id === 'library' ? 'Mr. Michael Tolosa' : office.head
+    }));
   }
 };
