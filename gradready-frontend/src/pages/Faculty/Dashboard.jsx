@@ -319,11 +319,11 @@ export default function Dashboard({ session }) {
               <p>No faculty profile found. Please contact support.</p>
             </div>
           ) : activeTab === 'notifications' ? (
-             <div className="animate-fade-in bg-[#18181b] border border-[#27272a] rounded-xl overflow-hidden shadow-sm p-6 max-w-5xl mx-auto">
+             <div className="animate-fade-in bg-[#18181b] border border-[#27272a] rounded-xl overflow-hidden shadow-sm p-6">
               <AdminNotifications notifications={notifications} onMarkAsRead={handleMarkAsRead} />
              </div>
           ) : (
-            <div className="animate-fade-in space-y-8 max-w-7xl mx-auto">
+            <div className="animate-fade-in space-y-8">
               {/* Stat Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
                 <DashboardStatCard label="Cleared" value={stats.cleared} icon={CheckCircle2} valueColor="text-green-400" />
@@ -343,7 +343,7 @@ export default function Dashboard({ session }) {
                 </div>
                 
                 <div className="p-6 bg-[#111114]">
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
                     {filteredStudents.length === 0 ? (
                       <div className="col-span-full text-center py-10 text-zinc-500">
                         {search ? 'No students match your search.' : 'No submissions found for your department.'}

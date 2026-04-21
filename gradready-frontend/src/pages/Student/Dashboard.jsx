@@ -212,11 +212,11 @@ export default function Dashboard({ session }) {
               <p className="text-zinc-500 text-sm">Loading your clearance data...</p>
             </div>
           ) : activeTab === 'directory' ? (
-            <div className="animate-fade-in max-w-7xl mx-auto">
+            <div className="animate-fade-in">
               <InfoDirectory />
             </div>
           ) : studentData ? (
-            <div className="animate-fade-in space-y-8 max-w-7xl mx-auto">
+            <div className="animate-fade-in space-y-8">
               
               {/* Stat Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
@@ -253,7 +253,7 @@ export default function Dashboard({ session }) {
               </div>
 
               {/* Department Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
                 {filteredDepartments.length === 0 ? (
                   <div className="col-span-full py-10 text-center text-zinc-500">
                     No departments match your search.

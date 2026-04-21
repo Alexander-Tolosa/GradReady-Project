@@ -10,7 +10,7 @@ import { notificationService } from '../../services/notificationService';
 import DashboardStatCard from '../../components/common/DashboardStatCard';// ─── Overview Tab ─────────────────────────────────────────────────────────────
 function OverviewTab({ stats, recentRequests = [], onApprove, onReject, onExport }) {
   return (
-    <div className="space-y-8 animate-fade-in max-w-7xl">
+    <div className="space-y-8 animate-fade-in">
       
       {/* Title & Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2">
