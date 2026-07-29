@@ -31,7 +31,7 @@ Developed by BSIT students at the University of San Agustin.
 * **Ella Jean Venus (Database Administrator & Integration)**
     * Designs and normalizes the PostgreSQL database schema hosted on Supabase.
     * Writes and optimizes SQL queries to link student data to departmental clearance statuses.
-* **Harry Leonard C. Villa (Quality Assurance & Testing)**
+* **Harry Leonard  Villa (Quality Assurance & Testing)**
     * Tests backend API endpoints and frontend component functionality.
     * Conducts end-to-end user flow testing for the clearance process and validates extraction rules.
 * **Sam Robert B. Susvilla (UI/UX Designer & Documentation)**
